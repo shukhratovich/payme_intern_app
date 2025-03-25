@@ -1,0 +1,178 @@
+kotlin version: 2.0.21
+error message: org.jetbrains.kotlin.backend.common.BackendException: Backend Internal error: Exception during IR lowering
+File being compiled: /Users/asomiddin/AndroidStudioProjects/PaymeInternApp/stopwatch/src/main/java/com/example/stopwatch/screen/stopwatcher/StopwatchScreen.kt
+The root cause java.lang.RuntimeException was thrown at: org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate(FunctionCodegen.kt:47)
+	at org.jetbrains.kotlin.backend.common.CodegenUtil.reportBackendException(CodegenUtil.kt:253)
+	at org.jetbrains.kotlin.backend.common.CodegenUtil.reportBackendException$default(CodegenUtil.kt:236)
+	at org.jetbrains.kotlin.backend.common.phaser.PerformByIrFilePhase.invokeSequential(performByIrFile.kt:65)
+	at org.jetbrains.kotlin.backend.common.phaser.PerformByIrFilePhase.invoke(performByIrFile.kt:52)
+	at org.jetbrains.kotlin.backend.common.phaser.PerformByIrFilePhase.invoke(performByIrFile.kt:38)
+	at org.jetbrains.kotlin.backend.common.phaser.NamedCompilerPhase.phaseBody(CompilerPhase.kt:166)
+	at org.jetbrains.kotlin.backend.common.phaser.AbstractNamedCompilerPhase.invoke(CompilerPhase.kt:113)
+	at org.jetbrains.kotlin.backend.common.phaser.CompositePhase.invoke(PhaseBuilders.kt:27)
+	at org.jetbrains.kotlin.backend.common.phaser.CompositePhase.invoke(PhaseBuilders.kt:14)
+	at org.jetbrains.kotlin.backend.common.phaser.NamedCompilerPhase.phaseBody(CompilerPhase.kt:166)
+	at org.jetbrains.kotlin.backend.common.phaser.AbstractNamedCompilerPhase.invoke(CompilerPhase.kt:113)
+	at org.jetbrains.kotlin.backend.common.phaser.CompilerPhaseKt.invokeToplevel(CompilerPhase.kt:62)
+	at org.jetbrains.kotlin.backend.jvm.JvmIrCodegenFactory.invokeCodegen(JvmIrCodegenFactory.kt:371)
+	at org.jetbrains.kotlin.codegen.CodegenFactory.generateModule(CodegenFactory.kt:47)
+	at org.jetbrains.kotlin.backend.jvm.JvmIrCodegenFactory.generateModuleInFrontendIRMode(JvmIrCodegenFactory.kt:433)
+	at org.jetbrains.kotlin.cli.jvm.compiler.pipeline.JvmCompilerPipelineKt.generateCodeFromIr(jvmCompilerPipeline.kt:246)
+	at org.jetbrains.kotlin.cli.jvm.compiler.pipeline.JvmCompilerPipelineKt.compileModulesUsingFrontendIrAndLightTree(jvmCompilerPipeline.kt:142)
+	at org.jetbrains.kotlin.cli.jvm.K2JVMCompiler.doExecute(K2JVMCompiler.kt:148)
+	at org.jetbrains.kotlin.cli.jvm.K2JVMCompiler.doExecute(K2JVMCompiler.kt:43)
+	at org.jetbrains.kotlin.cli.common.CLICompiler.execImpl(CLICompiler.kt:103)
+	at org.jetbrains.kotlin.cli.common.CLICompiler.execImpl(CLICompiler.kt:49)
+	at org.jetbrains.kotlin.cli.common.CLITool.exec(CLITool.kt:101)
+	at org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunner.runCompiler(IncrementalJvmCompilerRunner.kt:464)
+	at org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunner.runCompiler(IncrementalJvmCompilerRunner.kt:73)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.doCompile(IncrementalCompilerRunner.kt:506)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compileImpl(IncrementalCompilerRunner.kt:423)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compileNonIncrementally(IncrementalCompilerRunner.kt:301)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compile(IncrementalCompilerRunner.kt:129)
+	at org.jetbrains.kotlin.daemon.CompileServiceImplBase.execIncrementalCompiler(CompileServiceImpl.kt:675)
+	at org.jetbrains.kotlin.daemon.CompileServiceImplBase.access$execIncrementalCompiler(CompileServiceImpl.kt:92)
+	at org.jetbrains.kotlin.daemon.CompileServiceImpl.compile(CompileServiceImpl.kt:1660)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Unknown Source)
+	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
+	at java.rmi/sun.rmi.server.UnicastServerRef.dispatch(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport$1.run(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport$1.run(Unknown Source)
+	at java.base/java.security.AccessController.doPrivileged(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport.serviceCall(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport.handleMessages(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run0(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.lambda$run$0(Unknown Source)
+	at java.base/java.security.AccessController.doPrivileged(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+Caused by: java.lang.RuntimeException: Exception while generating code for:
+FUN name:Content visibility:public modality:OPEN <> ($this:com.example.stopwatch.screen.stopwatcher.StopwatchScreen) returnType:kotlin.Unit
+  annotations:
+    Composable
+  overridden:
+    public abstract fun Content (): kotlin.Unit declared in cafe.adriel.voyager.core.screen.Screen
+  $this: VALUE_PARAMETER name:<this> type:com.example.stopwatch.screen.stopwatcher.StopwatchScreen
+  BLOCK_BODY
+    VAR name:viewModel type:com.example.stopwatch.screen.stopwatcher.StopwatchContract.ViewModel [val]
+      TYPE_OP type=com.example.stopwatch.screen.stopwatcher.StopwatchViewModel origin=IMPLICIT_CAST typeOperand=com.example.stopwatch.screen.stopwatcher.StopwatchViewModel
+        CALL 'public final fun getViewModel$default <T> (viewModelProviderFactory: androidx.lifecycle.ViewModelProvider.Factory?, $mask0: kotlin.Int, $handler: kotlin.Any?): T of cafe.adriel.voyager.hilt.ViewModelKt.getViewModel$default [inline] declared in cafe.adriel.voyager.hilt.ViewModelKt' type=T of cafe.adriel.voyager.hilt.ViewModelKt.getViewModel$default origin=DEFAULT_DISPATCH_CALL
+          <T>: com.example.stopwatch.screen.stopwatcher.StopwatchViewModel
+          $receiver: GET_VAR '<this>: com.example.stopwatch.screen.stopwatcher.StopwatchScreen declared in com.example.stopwatch.screen.stopwatcher.StopwatchScreen.Content' type=com.example.stopwatch.screen.stopwatcher.StopwatchScreen origin=null
+          viewModelProviderFactory: COMPOSITE type=androidx.lifecycle.ViewModelProvider.Factory? origin=DEFAULT_VALUE
+            CONST Null type=androidx.lifecycle.ViewModelProvider.Factory? value=null
+          $mask0: CONST Int type=kotlin.Int value=1
+          $handler: CONST Null type=kotlin.Any? value=null
+    VAR PROPERTY_DELEGATE name:uiState$delegate type:androidx.compose.runtime.State<com.example.stopwatch.screen.stopwatcher.StopwatchContract.UiState> [val]
+      TYPE_OP type=androidx.compose.runtime.State<com.example.stopwatch.screen.stopwatcher.StopwatchContract.UiState> origin=IMPLICIT_CAST typeOperand=androidx.compose.runtime.State<com.example.stopwatch.screen.stopwatcher.StopwatchContract.UiState>
+        CALL 'public final fun collectAsState$default <T> (context: kotlin.coroutines.CoroutineContext?, $mask0: kotlin.Int, $handler: kotlin.Any?): androidx.compose.runtime.State<T of androidx.compose.runtime.SnapshotStateKt.collectAsState$default> declared in androidx.compose.runtime.SnapshotStateKt' type=androidx.compose.runtime.State<T of androidx.compose.runtime.SnapshotStateKt.collectAsState$default> origin=DEFAULT_DISPATCH_CALL
+          <T>: com.example.stopwatch.screen.stopwatcher.StopwatchContract.UiState
+          $receiver: CALL 'public abstract fun <get-uiState> (): kotlinx.coroutines.flow.StateFlow<com.example.stopwatch.screen.stopwatcher.StopwatchContract.UiState> declared in com.example.stopwatch.screen.stopwatcher.StopwatchContract.ViewModel' type=kotlinx.coroutines.flow.StateFlow<com.example.stopwatch.screen.stopwatcher.StopwatchContract.UiState> origin=GET_PROPERTY
+            $this: GET_VAR 'val viewModel: com.example.stopwatch.screen.stopwatcher.StopwatchContract.ViewModel [val] declared in com.example.stopwatch.screen.stopwatcher.StopwatchScreen.Content' type=com.example.stopwatch.screen.stopwatcher.StopwatchContract.ViewModel origin=null
+          context: COMPOSITE type=kotlin.coroutines.CoroutineContext? origin=DEFAULT_VALUE
+            CONST Null type=kotlin.coroutines.CoroutineContext? value=null
+          $mask0: CONST Int type=kotlin.Int value=1
+          $handler: CONST Null type=kotlin.Any? value=null
+    VAR PROPERTY_DELEGATE name:stopwatchState$delegate type:androidx.compose.runtime.State<kotlin.String> [val]
+      TYPE_OP type=androidx.compose.runtime.State<kotlin.String> origin=IMPLICIT_CAST typeOperand=androidx.compose.runtime.State<kotlin.String>
+        CALL 'public final fun collectAsState$default <T> (context: kotlin.coroutines.CoroutineContext?, $mask0: kotlin.Int, $handler: kotlin.Any?): androidx.compose.runtime.State<T of androidx.compose.runtime.SnapshotStateKt.collectAsState$default> declared in androidx.compose.runtime.SnapshotStateKt' type=androidx.compose.runtime.State<T of androidx.compose.runtime.SnapshotStateKt.collectAsState$default> origin=DEFAULT_DISPATCH_CALL
+          <T>: kotlin.String
+          $receiver: CALL 'public abstract fun <get-stopwatchState> (): kotlinx.coroutines.flow.MutableStateFlow<kotlin.String> declared in com.example.stopwatch.screen.stopwatcher.StopwatchContract.ViewModel' type=kotlinx.coroutines.flow.MutableStateFlow<kotlin.String> origin=GET_PROPERTY
+            $this: GET_VAR 'val viewModel: com.example.stopwatch.screen.stopwatcher.StopwatchContract.ViewModel [val] declared in com.example.stopwatch.screen.stopwatcher.StopwatchScreen.Content' type=com.example.stopwatch.screen.stopwatcher.StopwatchContract.ViewModel origin=null
+          context: COMPOSITE type=kotlin.coroutines.CoroutineContext? origin=DEFAULT_VALUE
+            CONST Null type=kotlin.coroutines.CoroutineContext? value=null
+          $mask0: CONST Int type=kotlin.Int value=1
+          $handler: CONST Null type=kotlin.Any? value=null
+    CALL 'public final fun access$StopwatchScreenContent (modifier: androidx.compose.ui.Modifier, stopwatchState: kotlin.String, uiState: com.example.stopwatch.screen.stopwatcher.StopwatchContract.UiState, onEventDispatcher: kotlin.Function1<com.example.stopwatch.screen.stopwatcher.StopwatchContract.Intent, kotlin.Unit>): kotlin.Unit declared in com.example.stopwatch.screen.stopwatcher.StopwatchScreenKt' type=kotlin.Unit origin=null
+      modifier: GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:modifier type:androidx.compose.ui.Modifier visibility:private [final]' type=androidx.compose.ui.Modifier origin=null
+        receiver: GET_VAR '<this>: com.example.stopwatch.screen.stopwatcher.StopwatchScreen declared in com.example.stopwatch.screen.stopwatcher.StopwatchScreen.Content' type=com.example.stopwatch.screen.stopwatcher.StopwatchScreen origin=null
+      stopwatchState: CALL 'private final fun Content$lambda$1 ($stopwatchState$delegate: androidx.compose.runtime.State<kotlin.String>): kotlin.String declared in com.example.stopwatch.screen.stopwatcher.StopwatchScreen' type=kotlin.String origin=GET_LOCAL_PROPERTY
+        $stopwatchState$delegate: GET_VAR 'val stopwatchState$delegate: androidx.compose.runtime.State<kotlin.String> [val] declared in com.example.stopwatch.screen.stopwatcher.StopwatchScreen.Content' type=androidx.compose.runtime.State<kotlin.String> origin=null
+      uiState: CALL 'private final fun Content$lambda$0 ($uiState$delegate: androidx.compose.runtime.State<com.example.stopwatch.screen.stopwatcher.StopwatchContract.UiState>): com.example.stopwatch.screen.stopwatcher.StopwatchContract.UiState declared in com.example.stopwatch.screen.stopwatcher.StopwatchScreen' type=com.example.stopwatch.screen.stopwatcher.StopwatchContract.UiState origin=GET_LOCAL_PROPERTY
+        $uiState$delegate: GET_VAR 'val uiState$delegate: androidx.compose.runtime.State<com.example.stopwatch.screen.stopwatcher.StopwatchContract.UiState> [val] declared in com.example.stopwatch.screen.stopwatcher.StopwatchScreen.Content' type=androidx.compose.runtime.State<com.example.stopwatch.screen.stopwatcher.StopwatchContract.UiState> origin=null
+      onEventDispatcher: BLOCK type=com.example.stopwatch.screen.stopwatcher.StopwatchScreen.Content.<no name provided> origin=null
+        CLASS FUNCTION_REFERENCE_IMPL CLASS name:<no name provided> modality:FINAL visibility:public/*package*/ superTypes:[kotlin.jvm.internal.FunctionReferenceImpl; kotlin.Function1<com.example.stopwatch.screen.stopwatcher.StopwatchContract.Intent, kotlin.Unit>]
+          $this: VALUE_PARAMETER INSTANCE_RECEIVER name:<this> type:com.example.stopwatch.screen.stopwatcher.StopwatchScreen.Content.<no name provided>
+          CONSTRUCTOR GENERATED_MEMBER_IN_CALLABLE_REFERENCE visibility:public/*package*/ <> (receiver:kotlin.Any?) returnType:com.example.stopwatch.screen.stopwatcher.StopwatchScreen.Content.<no name provided> [primary]
+            VALUE_PARAMETER name:receiver index:0 type:kotlin.Any?
+            BLOCK_BODY
+              DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> (arity: kotlin.Int, receiver: kotlin.Any?, owner: java.lang.Class<*>, name: kotlin.String, signature: kotlin.String, flags: kotlin.Int) declared in kotlin.jvm.internal.FunctionReferenceImpl'
+                arity: CONST Int type=kotlin.Int value=1
+                receiver: GET_VAR 'receiver: kotlin.Any? declared in com.example.stopwatch.screen.stopwatcher.StopwatchScreen.Content.<no name provided>.<init>' type=kotlin.Any? origin=null
+                owner: CALL 'public final fun <get-java> (): java.lang.Class<*> declared in kotlin.jvm.JvmClassMappingKt' type=java.lang.Class<*> origin=GET_PROPERTY
+                  $receiver: CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB INTERFACE name:KClass modality:ABSTRACT visibility:public superTypes:[kotlin.reflect.KDeclarationContainer; kotlin.reflect.KAnnotatedElement; kotlin.reflect.KClassifier]' type=kotlin.reflect.KClass<*>
+                name: CONST String type=kotlin.String value="onEventDispatcher"
+                signature: CALL 'public final fun <signature-string> (v: kotlin.Any?): kotlin.String declared in kotlin.jvm.internal' type=kotlin.String origin=null
+                  v: FUNCTION_REFERENCE 'public abstract fun onEventDispatcher (intent: com.example.stopwatch.screen.stopwatcher.StopwatchContract.Intent): kotlin.Unit declared in com.example.stopwatch.screen.stopwatcher.StopwatchContract.ViewModel' type=kotlin.reflect.KFunction1<com.example.stopwatch.screen.stopwatcher.StopwatchContract.Intent, kotlin.Unit> origin=null reflectionTarget=<same>
+                flags: CONST Int type=kotlin.Int value=0
+              BLOCK type=kotlin.Unit origin=null
+          FUN name:invoke visibility:public modality:FINAL <> ($this:com.example.stopwatch.screen.stopwatcher.StopwatchScreen.Content.<no name provided>, p0:com.example.stopwatch.screen.stopwatcher.StopwatchContract.Intent) returnType:kotlin.Unit
+            overridden:
+              public abstract fun invoke (p1: P1 of kotlin.Function1): R of kotlin.Function1 [operator] declared in kotlin.Function1
+            $this: VALUE_PARAMETER INSTANCE_RECEIVER name:<this> type:com.example.stopwatch.screen.stopwatcher.StopwatchScreen.Content.<no name provided>
+            VALUE_PARAMETER name:p0 index:0 type:com.example.stopwatch.screen.stopwatcher.StopwatchContract.Intent
+            EXPRESSION_BODY
+              CALL 'public abstract fun onEventDispatcher (intent: com.example.stopwatch.screen.stopwatcher.StopwatchContract.Intent): kotlin.Unit declared in com.example.stopwatch.screen.stopwatcher.StopwatchContract.ViewModel' type=kotlin.Unit origin=null
+                $this: TYPE_OP type=com.example.stopwatch.screen.stopwatcher.StopwatchContract.ViewModel origin=IMPLICIT_CAST typeOperand=com.example.stopwatch.screen.stopwatcher.StopwatchContract.ViewModel
+                  GET_FIELD 'FIELD name:receiver type:kotlin.Any? visibility:protected declared in com.example.stopwatch.screen.stopwatcher.StopwatchScreen.Content.<no name provided>' type=kotlin.Any? origin=null
+                    receiver: GET_VAR '<this>: com.example.stopwatch.screen.stopwatcher.StopwatchScreen.Content.<no name provided> declared in com.example.stopwatch.screen.stopwatcher.StopwatchScreen.Content.<no name provided>.invoke' type=com.example.stopwatch.screen.stopwatcher.StopwatchScreen.Content.<no name provided> origin=null
+                intent: GET_VAR 'p0: com.example.stopwatch.screen.stopwatcher.StopwatchContract.Intent declared in com.example.stopwatch.screen.stopwatcher.StopwatchScreen.Content.<no name provided>.invoke' type=com.example.stopwatch.screen.stopwatcher.StopwatchContract.Intent origin=null
+          FUN BRIDGE name:invoke visibility:public modality:OPEN <> ($this:com.example.stopwatch.screen.stopwatcher.StopwatchScreen.Content.<no name provided>, p1:kotlin.Any?) returnType:kotlin.Any?
+            $this: VALUE_PARAMETER INSTANCE_RECEIVER name:<this> type:com.example.stopwatch.screen.stopwatcher.StopwatchScreen.Content.<no name provided>
+            VALUE_PARAMETER BRIDGE name:p1 index:0 type:kotlin.Any?
+            EXPRESSION_BODY
+              RETURN type=kotlin.Nothing from='public open fun invoke (p1: kotlin.Any?): kotlin.Any? declared in com.example.stopwatch.screen.stopwatcher.StopwatchScreen.Content.<no name provided>'
+                CALL 'public final fun invoke (p0: com.example.stopwatch.screen.stopwatcher.StopwatchContract.Intent): kotlin.Unit declared in com.example.stopwatch.screen.stopwatcher.StopwatchScreen.Content.<no name provided>' type=kotlin.Unit origin=BRIDGE_DELEGATION
+                  $this: GET_VAR '<this>: com.example.stopwatch.screen.stopwatcher.StopwatchScreen.Content.<no name provided> declared in com.example.stopwatch.screen.stopwatcher.StopwatchScreen.Content.<no name provided>.invoke' type=com.example.stopwatch.screen.stopwatcher.StopwatchScreen.Content.<no name provided> origin=null
+                  p0: TYPE_OP type=com.example.stopwatch.screen.stopwatcher.StopwatchContract.Intent origin=IMPLICIT_CAST typeOperand=com.example.stopwatch.screen.stopwatcher.StopwatchContract.Intent
+                    GET_VAR 'p1: kotlin.Any? declared in com.example.stopwatch.screen.stopwatcher.StopwatchScreen.Content.<no name provided>.invoke' type=kotlin.Any? origin=null
+        CONSTRUCTOR_CALL 'public/*package*/ constructor <init> (receiver: kotlin.Any?) [primary] declared in com.example.stopwatch.screen.stopwatcher.StopwatchScreen.Content.<no name provided>' type=com.example.stopwatch.screen.stopwatcher.StopwatchScreen.Content.<no name provided> origin=null
+          receiver: GET_VAR 'val viewModel: com.example.stopwatch.screen.stopwatcher.StopwatchContract.ViewModel [val] declared in com.example.stopwatch.screen.stopwatcher.StopwatchScreen.Content' type=com.example.stopwatch.screen.stopwatcher.StopwatchContract.ViewModel origin=null
+
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate(FunctionCodegen.kt:47)
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate$default(FunctionCodegen.kt:40)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ClassCodegen.generateMethodNode(ClassCodegen.kt:406)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ClassCodegen.generateMethod(ClassCodegen.kt:423)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ClassCodegen.generate(ClassCodegen.kt:168)
+	at org.jetbrains.kotlin.backend.jvm.FileCodegen.lower(JvmPhases.kt:39)
+	at org.jetbrains.kotlin.backend.common.phaser.PhaseFactoriesKt.createFilePhase$lambda$4(PhaseFactories.kt:71)
+	at org.jetbrains.kotlin.backend.common.phaser.PhaseBuildersKt$createSimpleNamedCompilerPhase$1.phaseBody(PhaseBuilders.kt:69)
+	at org.jetbrains.kotlin.backend.common.phaser.SimpleNamedCompilerPhase.phaseBody(CompilerPhase.kt:226)
+	at org.jetbrains.kotlin.backend.common.phaser.AbstractNamedCompilerPhase.invoke(CompilerPhase.kt:113)
+	at org.jetbrains.kotlin.backend.common.phaser.PerformByIrFilePhase.invokeSequential(performByIrFile.kt:62)
+	... 43 more
+Caused by: org.jetbrains.kotlin.codegen.CompilationException: Back-end (JVM) Internal error: Couldn't inline method call: CALL 'public final fun getViewModel$default <T> (viewModelProviderFactory: androidx.lifecycle.ViewModelProvider.Factory?, $mask0: kotlin.Int, $handler: kotlin.Any?): T of cafe.adriel.voyager.hilt.ViewModelKt.getViewModel$default [inline] declared in cafe.adriel.voyager.hilt.ViewModelKt' type=T of cafe.adriel.voyager.hilt.ViewModelKt.getViewModel$default origin=DEFAULT_DISPATCH_CALL
+Method: null
+File is unknown
+The root cause java.lang.IllegalStateException was thrown at: org.jetbrains.kotlin.codegen.inline.SourceCompilerForInlineKt.getMethodNode(SourceCompilerForInline.kt:118)
+	at org.jetbrains.kotlin.codegen.inline.InlineCodegen.performInline(InlineCodegen.kt:65)
+	at org.jetbrains.kotlin.backend.jvm.codegen.IrInlineCodegen.genInlineCall(IrInlineCodegen.kt:163)
+	at org.jetbrains.kotlin.backend.jvm.codegen.IrInlineCallGenerator.genCall(IrInlineCallGenerator.kt:36)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitCall(ExpressionCodegen.kt:653)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitCall(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.expressions.IrCall.accept(IrCall.kt:24)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitTypeOperator(ExpressionCodegen.kt:1127)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitTypeOperator(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.expressions.IrTypeOperatorCall.accept(IrTypeOperatorCall.kt:26)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitVariable(ExpressionCodegen.kt:790)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitVariable(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.declarations.IrVariable.accept(IrVariable.kt:36)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitStatementContainer(ExpressionCodegen.kt:579)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitBlockBody(ExpressionCodegen.kt:584)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitBlockBody(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.expressions.IrBlockBody.accept(IrBlockBody.kt:20)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.generate(ExpressionCodegen.kt:240)
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.doGenerate(FunctionCodegen.kt:123)
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate(FunctionCodegen.kt:44)
+	... 53 more
+Caused by: java.lang.IllegalStateException: couldn't find inline method Lcafe/adriel/voyager/hilt/ViewModelKt;.getViewModel$default(Lcafe/adriel/voyager/core/screen/Screen;Landroidx/lifecycle/ViewModelProvider$Factory;ILjava/lang/Object;)Landroidx/lifecycle/ViewModel;
+	at org.jetbrains.kotlin.codegen.inline.SourceCompilerForInlineKt.getMethodNode(SourceCompilerForInline.kt:118)
+	at org.jetbrains.kotlin.codegen.inline.SourceCompilerForInlineKt.loadCompiledInlineFunction(SourceCompilerForInline.kt:96)
+	at org.jetbrains.kotlin.backend.jvm.codegen.IrSourceCompilerForInline.compileInlineFunction(IrSourceCompilerForInline.kt:91)
+	at org.jetbrains.kotlin.codegen.inline.InlineCodegen.compileInline(InlineCodegen.kt:43)
+	at org.jetbrains.kotlin.codegen.inline.InlineCodegen.performInline(InlineCodegen.kt:51)
+	... 71 more
+
+
