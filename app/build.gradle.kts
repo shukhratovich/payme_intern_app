@@ -60,7 +60,32 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    //voyager navigation
+    implementation(libs.voyager.navigator)
+
+    // Screen Model
+    implementation(libs.voyager.screenmodel)
+
+    // Transitions
+    implementation(libs.voyager.transitions)
+
+    // Koin integration
+    implementation(libs.voyager.koin)
+
+    //coil
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+
+    // Hilt integration to voyager
+    implementation(libs.voyager.hilt)
     //hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
+
+    //getViewModel
+    implementation(libs.androidx.lifecycle.viewmodel.compose.v261)
+
+    implementation(project(":domain"))
+    implementation(project(":data"))
+
 }

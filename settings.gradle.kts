@@ -21,6 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Payme Intern App"
 include(":app")
-include(":presenters")
-include(":usecases")
-include(":entities")
+include(":domain")
+include(":data")

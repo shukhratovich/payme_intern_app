@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.presenters"
+    namespace = "com.example.domain"
     compileSdk = 35
 
     defaultConfig {
@@ -42,10 +42,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
     //hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
-
 }

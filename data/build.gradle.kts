@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.presenters"
+    namespace = "com.example.data"
     compileSdk = 35
 
     defaultConfig {
@@ -42,10 +42,19 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+
+    //DataStore
+    implementation(libs.androidx.datastore.preferences)
+    //retrofit
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+
+    //gson
+    implementation(libs.gson)
 
     //hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
 
+    implementation(project(":domain"))
 }
