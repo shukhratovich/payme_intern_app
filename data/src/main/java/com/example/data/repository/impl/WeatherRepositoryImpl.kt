@@ -1,6 +1,5 @@
 package com.example.data.repository.impl
 
-import android.util.Log
 import com.example.data.remote.weather.api.WeatherApi
 import com.example.data.remote.weather.response.toData
 import com.example.domain.entities.weather.WeatherUIData
@@ -17,14 +16,16 @@ import javax.inject.Singleton
 class WeatherRepositoryImpl @Inject constructor(
     private val weatherApi: WeatherApi
 ) : WeatherRepository {
-    override fun getCurrentWeatherData(lon: String, lat: String): Flow<Result<WeatherUIData>> = flow {
-        val result = weatherApi.getCurrentWeatherData(lon = lon, lat = lat)
+    override fun getCurrentWeatherData(lon: String, lat: String): Flow<Result<WeatherUIData>> =
+        flow {
+            val result = weatherApi.getCurrentWeatherData(lon = lon, lat = lat)
 
-        if (result.isSuccessful) {
-            Log.d("TTT", "getCurrentWeatherData: ${result.body()}")
-            emit(Result.success(result.body()!!.toData()))
+            if (result.isSuccessful && result.body() != null) {
+                emit(Result.success(result.body()!!.toData()))
+            } else {
+                emit(Result.failure(Throwable(result.message().toString())))
+            }
+        }.flowOn(Dispatchers.IO).catch { error ->
+            emit(Result.failure(error))
         }
-    }.flowOn(Dispatchers.IO).catch { error -> emit(Result.failure(error))
-        Log.d("TTT", "getCurrentWeatherData: ${error.message}")
-    }
 }

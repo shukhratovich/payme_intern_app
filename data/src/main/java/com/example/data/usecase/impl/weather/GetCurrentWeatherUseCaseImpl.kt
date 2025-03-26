@@ -4,7 +4,6 @@ import com.example.domain.entities.weather.WeatherUIData
 import com.example.domain.repository.WeatherRepository
 import com.example.domain.usecases.weather.GetCurrentWeatherUseCase
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class GetCurrentWeatherUseCaseImpl @Inject constructor(private val weatherRepository: WeatherRepository) :

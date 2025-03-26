@@ -5,6 +5,7 @@ import com.example.paymeinternapp.utils.DateFormatter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
@@ -25,7 +26,7 @@ object TimerClock {
 
     var stopwatchState = MutableStateFlow("00:00:00")
 
-//    var onElapsedTimeListener: ((Long) -> Unit)? = null
+    //    var onElapsedTimeListener: ((Long) -> Unit)? = null
     var onCurrentTimeListener: ((String) -> Unit)? = null
 
 
@@ -42,7 +43,7 @@ object TimerClock {
         }
     }
 
-    fun runClock(){
+    fun runClock() {
         if (clocksJob == null) {
             clocksJob = CoroutineScope(Dispatchers.Default).launch {
                 while (isActive) {
