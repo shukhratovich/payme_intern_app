@@ -1,6 +1,7 @@
 package com.example.data.di
 
-import com.example.data.remote.weather.api.WeatherApi
+import com.example.data.remote.api.NewsApi
+import com.example.data.remote.api.WeatherApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,6 +15,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
     private val weatherBaseUrl = "https://api.openweathermap.org/data/2.5/"
+    private val newsBaseUrl = "https://newsapi.org/v2/"
 
     @[Provides Singleton]
     fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder()
@@ -27,4 +29,11 @@ class NetworkModule {
         .build()
         .create(WeatherApi::class.java)
 
+    @[Provides Singleton]
+    fun provideNewsApi(client: OkHttpClient): NewsApi = Retrofit.Builder()
+        .baseUrl(newsBaseUrl)
+        .client(client)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+        .create(NewsApi::class.java)
 }

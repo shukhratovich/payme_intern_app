@@ -1,5 +1,6 @@
 package com.example.paymeinternapp.screens.weather
 
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.usecases.weather.GetCurrentWeatherUseCase
@@ -51,7 +52,7 @@ class WeatherViewModel @Inject constructor(
                         description = success.description,
                         humidity = success.humidity,
                         wind = success.wind,
-                        mainDescription = getWeatherDescription(success.mainDescription),
+                        backgroundColor = getColorBackground(success.mainDescription),
                         isLoading = false,
                         errorMessage = null
                     )
@@ -63,17 +64,29 @@ class WeatherViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun getWeatherDescription(weather: String): WeatherType {
+//    fun getWeatherDescription(weather: String): WeatherType {
+//        return when (weather) {
+//            "Clouds" -> WeatherType.CLOUDY
+//            "Clear" -> WeatherType.CLEAR
+//            "Atmosphere" -> WeatherType.ATMOSPHERE
+//            "Snow" -> WeatherType.SNOWY
+//            "Rain", "Drizzle" -> WeatherType.RAINY
+//            "Thunderstorm" -> WeatherType.THUNDERSTORM
+//            else -> {
+//                WeatherType.NON
+//            }
+//        }
+//    }
+
+    fun getColorBackground(weather: String): Color {
         return when (weather) {
-            "Clouds" -> WeatherType.CLOUDY
-            "Clear" -> WeatherType.CLEAR
-            "Atmosphere" -> WeatherType.ATMOSPHERE
-            "Snow" -> WeatherType.SNOWY
-            "Rain", "Drizzle" -> WeatherType.RAINY
-            "Thunderstorm" -> WeatherType.THUNDERSTORM
-            else -> {
-                WeatherType.NON
-            }
+            "Clouds" -> Color(0xFFB0BEC5)
+            "Rain" -> Color(0xFF607D8B)
+            "Snow" -> Color(0xFFE3F2FD)
+            "Clear" -> Color(0xFF2193b0)
+            "Atmosphere" -> Color(0xFF6dd5ed)
+            "Thunderstorm" -> Color(0xFF354349)
+            else -> Color(0xFF607D8B)
         }
     }
 }

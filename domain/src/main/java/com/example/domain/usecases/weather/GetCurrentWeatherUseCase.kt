@@ -1,6 +1,6 @@
 package com.example.domain.usecases.weather
 
-import com.example.domain.entities.weather.WeatherUIData
+import com.example.domain.entities.WeatherUIData
 import kotlinx.coroutines.flow.Flow
 
 interface GetCurrentWeatherUseCase {

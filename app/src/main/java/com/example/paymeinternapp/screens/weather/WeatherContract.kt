@@ -1,5 +1,6 @@
 package com.example.paymeinternapp.screens.weather
 
+import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.flow.StateFlow
 
 interface WeatherContract {
@@ -9,12 +10,12 @@ interface WeatherContract {
 
     data class UiState(
         val isLoading: Boolean = false,
+        val backgroundColor: Color = Color(0xffffffff),
         val temp: Int = 0,
         val cityName: String = "",
         val icon: String = "",
         val wind: String = "",
         val humidity: String = "",
-        val mainDescription: WeatherType = WeatherType.SUNNY,
         val description: String = "",
         val errorMessage: String? = null
     )

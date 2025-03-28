@@ -1,4 +1,4 @@
-package com.example.domain.entities.weather
+package com.example.domain.entities
 
 data class WeatherUIData(
     val temp: Int,

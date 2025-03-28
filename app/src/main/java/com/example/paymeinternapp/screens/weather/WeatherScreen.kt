@@ -51,16 +51,7 @@ fun WeatherScreenContent(
     onEventDispatcher: (WeatherContract.Intent) -> Unit
 ) {
     val backgroundColor by animateColorAsState(
-        when (uiState.mainDescription) {
-            WeatherType.SUNNY -> Color(0xFFFFD700)
-            WeatherType.CLOUDY -> Color(0xFFB0BEC5)
-            WeatherType.RAINY -> Color(0xFF607D8B)
-            WeatherType.SNOWY -> Color(0xFFE3F2FD)
-            WeatherType.CLEAR -> Color(0xFF2193b0)
-            WeatherType.ATMOSPHERE -> Color(0xFF6dd5ed)
-            WeatherType.THUNDERSTORM -> Color(0xFF354349)
-            WeatherType.NON -> Color(0xFF607D8B)
-        }
+        uiState.backgroundColor
     )
     Column(
         verticalArrangement = Arrangement.Center
@@ -143,16 +134,11 @@ fun WeatherDetail(title: String, value: String) {
 @Composable
 fun RefreshButton(onClick: () -> Unit) {
     Icon(
+        imageVector = Icons.Default.Refresh,
+        tint = Color.White,
+        contentDescription = "Refresh",
         modifier = Modifier
             .size(100.dp)
             .clickable { onClick() },
-        imageVector = Icons.Default.Refresh,
-        tint = Color.White,
-        contentDescription = "Refresh"
     )
-}
-
-
-enum class WeatherType {
-    SUNNY, CLOUDY, CLEAR, ATMOSPHERE, THUNDERSTORM, RAINY, SNOWY, NON
 }

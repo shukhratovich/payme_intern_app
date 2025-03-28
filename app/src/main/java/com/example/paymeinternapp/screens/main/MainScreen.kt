@@ -29,7 +29,6 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -40,6 +39,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import com.example.paymeinternapp.R
+import com.example.paymeinternapp.screens.news.NewsScreen
 import com.example.paymeinternapp.screens.stopwatcher.StopwatchScreen
 import com.example.paymeinternapp.screens.weather.WeatherScreen
 import kotlinx.coroutines.launch
@@ -64,10 +64,16 @@ private fun MainContent(modifier: Modifier = Modifier) {
             title = "Stopwatch",
             icon = R.drawable.ic_timer,
             screenTitle = "Stopwatch"
-        ), NavigationItem(
+        ),
+        NavigationItem(
             title = "Weather",
             icon = R.drawable.ic_weather,
             screenTitle = "Weather"
+        ),
+        NavigationItem(
+            title = "News",
+            icon = R.drawable.ic_news,
+            screenTitle = "News"
         )
     )
     Surface(
@@ -136,17 +142,10 @@ private fun MainContent(modifier: Modifier = Modifier) {
                         })
                 }) { paddingValues ->
 
-                val stopwatchScreen = remember {
-                    StopwatchScreen(modifier.padding(paddingValues))
-                }
-                val weatherScreen = remember {
-                    WeatherScreen(modifier.padding(paddingValues))
-                }
-
                 when (selectedItemIndex) {
-                    0 -> stopwatchScreen.Content()
-
-                    1 -> weatherScreen.Content()
+                    0 -> StopwatchScreen(modifier.padding(paddingValues)).Content()
+                    1 -> WeatherScreen(modifier.padding(paddingValues)).Content()
+                    2 -> NewsScreen(modifier.padding(paddingValues)).Content()
                 }
             }
         }

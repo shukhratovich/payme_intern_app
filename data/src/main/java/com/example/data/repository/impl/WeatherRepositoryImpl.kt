@@ -1,8 +1,8 @@
 package com.example.data.repository.impl
 
-import com.example.data.remote.weather.api.WeatherApi
-import com.example.data.remote.weather.response.toData
-import com.example.domain.entities.weather.WeatherUIData
+import com.example.data.remote.api.WeatherApi
+import com.example.data.remote.response.toData
+import com.example.domain.entities.WeatherUIData
 import com.example.domain.repository.WeatherRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -16,6 +16,7 @@ import javax.inject.Singleton
 class WeatherRepositoryImpl @Inject constructor(
     private val weatherApi: WeatherApi
 ) : WeatherRepository {
+
     override fun getCurrentWeatherData(lon: String, lat: String): Flow<Result<WeatherUIData>> =
         flow {
             val result = weatherApi.getCurrentWeatherData(lon = lon, lat = lat)
