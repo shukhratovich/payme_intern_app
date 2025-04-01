@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.flow.StateFlow
 
 interface WeatherContract {
-    interface Intent {
+    sealed interface Intent {
         data object Refresh : Intent
     }
 

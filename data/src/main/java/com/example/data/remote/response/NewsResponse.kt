@@ -11,12 +11,12 @@ data class NewsResponse(
     @SerializedName("totalResults")
     val totalResults: Int?,
     @SerializedName("articles")
-    val articles: List<ArticlesData>
+    val articles: List<ArticlesData>?
 )
 
 data class ArticlesData(
     @SerializedName("source")
-    val source: SourceData,
+    val source: SourceData?,
     @SerializedName("author")
     val author: String?,
     @SerializedName("title")
@@ -30,7 +30,7 @@ data class ArticlesData(
     @SerializedName("publishedAt")
     val publishedAt: String?,
     @SerializedName("content")
-    val content: String
+    val content: String?
 )
 
 data class SourceData(
@@ -44,19 +44,19 @@ fun NewsResponse.toUIData(): NewsUIData =
     NewsUIData(
         status = status ?: "",
         totalResults = totalResults ?: 0,
-        articles = articles.map { it.toUIData() }
+        articles = articles?.map { it.toUIData() } ?: emptyList()
     )
 
 fun ArticlesData.toUIData(): ArticleUIData =
     ArticleUIData(
-        source = source.toUiData(),
+        source = (source ?: SourceData(id = null, name = null)).toUiData(),
         author = author ?: "",
         title = title ?: "",
         description = description ?: "",
         url = url ?: "",
         urlToImage = urlToImage ?: "",
         publishedAt = publishedAt ?: "",
-        content = content
+        content = content ?: ""
     )
 
 fun SourceData.toUiData(): SourceUIData = SourceUIData(id = id, name = name)

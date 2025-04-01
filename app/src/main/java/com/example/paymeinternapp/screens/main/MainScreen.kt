@@ -39,7 +39,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import com.example.paymeinternapp.R
-import com.example.paymeinternapp.screens.news.NewsScreen
+import com.example.paymeinternapp.screens.news.categories.NewsScreen
 import com.example.paymeinternapp.screens.stopwatcher.StopwatchScreen
 import com.example.paymeinternapp.screens.weather.WeatherScreen
 import kotlinx.coroutines.launch

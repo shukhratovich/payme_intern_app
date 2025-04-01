@@ -34,4 +34,18 @@ class NewsRepositoryImpl @Inject constructor(
         emit(Result.failure(error))
     }
 
+    override fun getNewsByCategory(category: String): Flow<Result<NewsUIData>> = flow {
+
+        val result = newsApi.getNewsByCategory(category = category)
+        if (result.isSuccessful && result.body() != null) {
+            emit(Result.success(result.body()!!.toUIData()))
+        } else {
+            emit(Result.failure(Throwable(result.message().toString())))
+        }
+
+
+    }.flowOn(Dispatchers.IO).catch { error ->
+        emit(Result.failure(error))
+    }
+
 }

@@ -1,6 +1,5 @@
 package com.example.data.usecase.impl.news
 
-import com.example.data.remote.api.NewsApi
 import com.example.domain.entities.NewsUIData
 import com.example.domain.repository.NewsRepository
 import com.example.domain.usecases.news.GetNewsBySearchUseCase

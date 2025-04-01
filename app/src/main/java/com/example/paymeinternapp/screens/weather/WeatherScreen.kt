@@ -87,7 +87,7 @@ fun WeatherScreenContent(
                         Spacer(modifier = Modifier.height(8.dp))
                         AsyncImage(
                             modifier = Modifier.size(125.dp),
-                            model = "https://openweathermap.org/img/wn/${uiState.icon}@2x.png",
+                            model = uiState.icon,
                             contentDescription = "Weather Icon"
                         )
                         Spacer(modifier = Modifier.height(8.dp))

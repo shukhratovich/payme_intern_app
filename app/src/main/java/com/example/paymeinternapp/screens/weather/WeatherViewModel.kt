@@ -15,6 +15,7 @@ import javax.inject.Inject
 class WeatherViewModel @Inject constructor(
     private val getCurrentWeatherUseCase: GetCurrentWeatherUseCase
 ) : ViewModel(), WeatherContract.ViewModel {
+
     override val uiState = MutableStateFlow(WeatherContract.UiState())
 
     init {
@@ -48,7 +49,7 @@ class WeatherViewModel @Inject constructor(
                     it.copy(
                         cityName = success.cityName,
                         temp = success.temp,
-                        icon = success.icon,
+                        icon = "https://openweathermap.org/img/wn/${success.icon}@2x.png",
                         description = success.description,
                         humidity = success.humidity,
                         wind = success.wind,
