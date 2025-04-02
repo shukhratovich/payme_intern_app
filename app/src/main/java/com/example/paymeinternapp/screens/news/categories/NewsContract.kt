@@ -8,6 +8,7 @@ interface NewsContract {
         data class SearchByQuery(val query: String) : Intent
         data class OpenDetails(val item: ArticleUIData) : Intent
         data class ClickedCategory(val category: String) : Intent
+        data object PullToRefresh : Intent
     }
 
     data class UiState(

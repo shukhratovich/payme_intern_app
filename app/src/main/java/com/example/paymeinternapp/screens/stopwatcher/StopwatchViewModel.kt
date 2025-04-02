@@ -1,6 +1,6 @@
 package com.example.paymeinternapp.screens.stopwatcher
 
-import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.usecases.stopwatch.GetSavedTimeUseCase
@@ -8,17 +8,14 @@ import com.example.domain.usecases.stopwatch.SaveTimeUseCase
 import com.example.paymeinternapp.timer.TimerClock
 import com.example.paymeinternapp.utils.DateFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
 class StopwatchViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
     private val saveTimeUseCase: SaveTimeUseCase,
     private val getSavedTimeUseCase: GetSavedTimeUseCase
 ) : ViewModel(), StopwatchContract.ViewModel {
@@ -31,6 +28,8 @@ class StopwatchViewModel @Inject constructor(
             getSavedTimeUseCase.invoke().collectLatest { elapsedTime ->
                 TimerClock.setElapsedTime(elapsedTime)
                 stopwatchState.value = DateFormatter.formatTimer(elapsedTime)
+                Log.d("TTT", "stopwatch: ${stopwatchState.value}")
+                Log.d("TTT", "elapsedTime: $elapsedTime")
             }
         }
         TimerClock.onCurrentTimeListener = { currentTime ->
@@ -75,13 +74,16 @@ class StopwatchViewModel @Inject constructor(
         }
     }
 
+
     override fun onCleared() {
         {
             super.onCleared()
-            runBlocking {
+            TimerClock.onDestroy()
+            viewModelScope.launch {
+                Log.d("TTT", "onCleared: ")
                 saveTimeUseCase.invoke(TimerClock.getElapsedTime())
             }
-            TimerClock.onDestroy()
+            Log.d("TTT", "onCleared: ")
         }
     }
 }

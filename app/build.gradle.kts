@@ -60,6 +60,15 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    //accompanist
+    implementation(libs.accompanist.webview)
+
+    // swipe to refresh
+    implementation(libs.accompanist.swiperefresh)
+
+    //Glide
+    implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
+
     //voyager navigation
     implementation(libs.voyager.navigator)
 

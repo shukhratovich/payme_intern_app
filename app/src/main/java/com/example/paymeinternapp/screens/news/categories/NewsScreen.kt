@@ -20,13 +20,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -40,9 +43,14 @@ import cafe.adriel.voyager.hilt.getViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import coil3.compose.rememberAsyncImagePainter
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.example.domain.entities.ArticleUIData
 import com.example.paymeinternapp.R
 import com.example.paymeinternapp.screens.news.details.NewsDetails
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 class NewsScreen(private val modifier: Modifier = Modifier) : Screen {
     @Composable
@@ -62,67 +70,94 @@ private fun NewsScreenContent(
     val navigator = LocalNavigator.currentOrThrow
     val searchText = remember { mutableStateOf("") }
     var selectedCategory = remember { mutableStateOf(uiState.categories[0]) }
+    val swipeRefreshState = rememberSwipeRefreshState(uiState.isLoading)
 
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.White)
+    SwipeRefresh(
+        state = swipeRefreshState,
+        onRefresh = {
+//            onEventDispatcher()
+        },
+        indicator = { state, trigger ->
+            SwipeRefreshIndicator(
+                state = swipeRefreshState,
+                refreshTriggerDistance = 120.dp,
+                backgroundColor = MaterialTheme.colorScheme.onPrimary,
+                contentColor = Color.LightGray
+            )
+        }
     ) {
+        LazyColumn(
+            modifier = modifier
+                .fillMaxSize()
+                .background(Color.White)
+        ) {
 
-        item {
-            Column {
-                OutlinedTextField(
-                    value = searchText.value,
-                    onValueChange = {
-                        searchText.value = it
-                        onEventDispatcher(NewsContract.Intent.SearchByQuery(it))
-                    },
-                    placeholder = { Text("Search file...") },
-                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                        .clip(RoundedCornerShape(12.dp)),
-                    shape = RoundedCornerShape(12.dp),
-                    singleLine = true
-                )
+            item {
+                Column {
+                    OutlinedTextField(
+                        value = searchText.value,
+                        onValueChange = {
+                            searchText.value = it
+                            onEventDispatcher(NewsContract.Intent.SearchByQuery(it))
+                        },
+                        placeholder = { Text("Search file...") },
+                        leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                            .clip(RoundedCornerShape(12.dp)),
+                        shape = RoundedCornerShape(12.dp),
+                        singleLine = true
+                    )
 
-                Spacer(modifier = Modifier.height(24.dp))
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    contentPadding = PaddingValues(horizontal = 16.dp)
-                ) {
-                    items(uiState.categories) { category ->
-                        CategoryChip(
-                            text = category,
-                            isSelected = category == selectedCategory.value,
-                            onClick = {
-                                selectedCategory.value = category
-                                onEventDispatcher(NewsContract.Intent.ClickedCategory(category))
-                            }
-                        )
+                    Spacer(modifier = Modifier.height(24.dp))
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        contentPadding = PaddingValues(horizontal = 16.dp)
+                    ) {
+                        items(uiState.categories) { category ->
+                            CategoryChip(
+                                text = category,
+                                isSelected = category == selectedCategory.value,
+                                onClick = {
+                                    selectedCategory.value = category
+                                    onEventDispatcher(NewsContract.Intent.ClickedCategory(category))
+                                }
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    Text(
+                        text = "Latest News",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.Gray,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
+            if (uiState.isLoading) {
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
                     }
                 }
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Text(
-                    text = "Latest News",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.Gray,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
+            } else {
+                items(uiState.articles) { newsItem ->
+                    NewsCard(newsItem = newsItem) {
+                        navigator.push(NewsDetails(newsItem))
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
             }
-        }
-
-        items(uiState.articles) { newsItem ->
-            NewsCard(newsItem = newsItem) {
-                navigator.push(NewsDetails(newsItem))
-            }
-            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
@@ -145,6 +180,7 @@ fun CategoryChip(text: String, isSelected: Boolean, onClick: () -> Unit) {
     }
 }
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun NewsCard(newsItem: ArticleUIData, onClick: () -> Unit) {
     Card(
@@ -165,41 +201,34 @@ fun NewsCard(newsItem: ArticleUIData, onClick: () -> Unit) {
                     .clip(RoundedCornerShape(8.dp))
                     .background(Color.LightGray)
             ) {
-                if (newsItem.url.isEmpty()) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_placeholder),
-                        contentDescription = "News image",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                } else {
-                    Image(
-                        painter = rememberAsyncImagePainter(
-                            model = newsItem.urlToImage,
-                            onLoading = { test ->
-
-                            },
-                            onError = {
-                                R.drawable.ic_placeholder
-                            }
-                        ),
-                        contentDescription = "News image",
-                        modifier = Modifier.fillMaxSize(),
-                    )
+                GlideImage(
+                    model = newsItem.urlToImage,
+                    contentDescription = "Item Image",
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    it.load(newsItem.urlToImage)
+                        .placeholder(R.drawable.ic_placeholder)
+                        .error(R.drawable.ic_no_image_available)
+                        .fallback(R.drawable.ic_no_image_available)
                 }
             }
 
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = newsItem.title,
+                text = newsItem.title ?: "",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black
             )
 
             Spacer(modifier = Modifier.height(12.dp))
-
+            Text(
+                text = newsItem.description ?: "",
+                color = Color.White,
+                fontWeight = FontWeight.Medium,
+                maxLines = 3
+            )
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(8.dp))
@@ -207,7 +236,7 @@ fun NewsCard(newsItem: ArticleUIData, onClick: () -> Unit) {
                     .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
                 Text(
-                    text = newsItem.description,
+                    text = "See more ...",
                     color = Color.White,
                     fontWeight = FontWeight.Medium
                 )

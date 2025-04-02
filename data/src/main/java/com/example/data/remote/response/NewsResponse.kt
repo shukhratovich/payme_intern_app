@@ -50,13 +50,13 @@ fun NewsResponse.toUIData(): NewsUIData =
 fun ArticlesData.toUIData(): ArticleUIData =
     ArticleUIData(
         source = (source ?: SourceData(id = null, name = null)).toUiData(),
-        author = author ?: "",
-        title = title ?: "",
-        description = description ?: "",
-        url = url ?: "",
-        urlToImage = urlToImage ?: "",
-        publishedAt = publishedAt ?: "",
-        content = content ?: ""
+        author = author,
+        title = title,
+        description = description,
+        url = url,
+        urlToImage = urlToImage,
+        publishedAt = publishedAt,
+        content = content
     )
 
 fun SourceData.toUiData(): SourceUIData = SourceUIData(id = id, name = name)
