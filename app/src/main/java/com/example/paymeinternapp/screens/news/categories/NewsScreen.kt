@@ -1,6 +1,5 @@
 package com.example.paymeinternapp.screens.news.categories
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -33,8 +32,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,7 +39,6 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.hilt.getViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import coil3.compose.rememberAsyncImagePainter
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.domain.entities.ArticleUIData
@@ -136,26 +132,32 @@ private fun NewsScreenContent(
                         color = Color.Gray,
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
             if (uiState.isLoading) {
                 item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        contentAlignment = Alignment.Center
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         CircularProgressIndicator()
                     }
+
                 }
             } else {
                 items(uiState.articles) { newsItem ->
-                    NewsCard(newsItem = newsItem) {
-                        navigator.push(NewsDetails(newsItem))
+                    Column(
+                        modifier = Modifier
+                            .background(color = Color.LightGray)
+                    ) {
+                        NewsCard(newsItem = newsItem) {
+                            navigator.push(NewsDetails(newsItem))
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
+
                 }
             }
         }
