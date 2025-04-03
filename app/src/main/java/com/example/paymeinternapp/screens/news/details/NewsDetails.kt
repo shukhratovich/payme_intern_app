@@ -1,7 +1,9 @@
 package com.example.paymeinternapp.screens.news.details
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,6 +26,7 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
@@ -54,20 +57,31 @@ private fun NewsDetailsContent(modifier: Modifier = Modifier, article: ArticleUI
     val navigator = LocalNavigator.currentOrThrow
     val scrollState = rememberScrollState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    containerColor = MaterialTheme.colorScheme.background,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground,
                 ),
                 title = {
-                    Text(
-                        text = article.title ?: "",
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp)
+                            .clipToBounds()
+                    ) {
+                        Text(
+                            text = article.title ?: "",
+                            fontSize = 20.sp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Clip,
+                            modifier = Modifier
+                                .basicMarquee()
+                        )
+                    }
                 },
                 navigationIcon = {
                     IconButton(onClick = { navigator.pop() }) {
@@ -84,7 +98,7 @@ private fun NewsDetailsContent(modifier: Modifier = Modifier, article: ArticleUI
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.surfaceContainerLow)
                 .verticalScroll(state = scrollState)
         ) {
             GlideImage(
@@ -107,7 +121,7 @@ private fun NewsDetailsContent(modifier: Modifier = Modifier, article: ArticleUI
             ) {
                 Text(
                     text = article.title ?: "",
-                    color = Color.Blue,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp,
                     modifier = Modifier.padding(bottom = 8.dp)
@@ -117,7 +131,7 @@ private fun NewsDetailsContent(modifier: Modifier = Modifier, article: ArticleUI
                     text = article.description ?: "",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
 
@@ -126,21 +140,10 @@ private fun NewsDetailsContent(modifier: Modifier = Modifier, article: ArticleUI
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = article.author ?: "",
-                        color = Color.Gray,
+                        text = "${article.author ?: ""} - ${article.publishedAt ?: ""}",
+                        color = MaterialTheme.colorScheme.outlineVariant,
                         fontSize = 14.sp,
                         modifier = Modifier.padding(end = 8.dp)
-                    )
-                    Text(
-                        text = "–",
-                        color = Color.Gray,
-                        fontSize = 14.sp,
-                        modifier = Modifier.padding(horizontal = 4.dp)
-                    )
-                    Text(
-                        text = article.publishedAt ?: "",
-                        color = Color.Gray,
-                        fontSize = 14.sp
                     )
                 }
 
@@ -148,7 +151,7 @@ private fun NewsDetailsContent(modifier: Modifier = Modifier, article: ArticleUI
                     text = article.content ?: "",
                     fontSize = 16.sp,
                     lineHeight = 24.sp,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Justify
                 )
                 Text(

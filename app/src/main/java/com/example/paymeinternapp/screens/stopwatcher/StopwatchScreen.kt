@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -67,6 +69,7 @@ private fun StopwatchScreenContent(
     Scaffold { innerPadding ->
         Column(
             modifier = modifier
+                .background(color = MaterialTheme.colorScheme.background)
                 .padding(innerPadding)
                 .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
@@ -76,7 +79,7 @@ private fun StopwatchScreenContent(
                 modifier = Modifier
                     .animateContentSize()
                     .clip(RoundedCornerShape(50.dp))
-                    .background(color = Color(0xFF00BCD4))
+                    .background(color = MaterialTheme.colorScheme.primary)
                     .padding(24.dp)
 
             ) {
@@ -85,11 +88,19 @@ private fun StopwatchScreenContent(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     if (uiState.currentTime != "00:00:00") {
-                        Text(text = uiState.currentTime, fontSize = 22.sp)
+                        Text(
+                            text = uiState.currentTime,
+                            fontSize = 22.sp,
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
                     } else {
                         onEventDispatcher(StopwatchContract.Intent.RefreshTime)
                     }
-                    Text(text = stopwatchState, fontSize = 32.sp)
+                    Text(
+                        text = stopwatchState,
+                        fontSize = 32.sp,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
                 }
             }
             if (uiState.lapsList.isEmpty()) {
@@ -103,6 +114,7 @@ private fun StopwatchScreenContent(
                             .animateContentSize()
                             .align(Alignment.Center),
                         painter = painterResource(R.drawable.timer),
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
                         contentDescription = "nothing"
                     )
                 }
@@ -146,10 +158,10 @@ private fun StopwatchScreenContent(
                     } else {
                         "Start"
                     },
-                    color = if (uiState.isRunning) {
-                        Color(0xFFFF5722)
+                    colorBox = if (uiState.isRunning) {
+                        MaterialTheme.colorScheme.tertiary
                     } else {
-                        Color(0xFF8BC34A)
+                        MaterialTheme.colorScheme.tertiaryContainer
                     },
                     modifier = Modifier,
                     onClick = {
@@ -158,7 +170,8 @@ private fun StopwatchScreenContent(
                         } else {
                             onEventDispatcher(StopwatchContract.Intent.ClickedStart)
                         }
-                    }
+                    },
+                    colorText = MaterialTheme.colorScheme.onTertiaryContainer
                 )
                 MyCustomButton(
                     text = if (uiState.isRunning) {
@@ -173,11 +186,12 @@ private fun StopwatchScreenContent(
                             onEventDispatcher(StopwatchContract.Intent.ClickedReset)
                         }
                     },
-                    color = if (uiState.isRunning) {
-                        Color(0xFFFFC107)
+                    colorBox = if (uiState.isRunning) {
+                        MaterialTheme.colorScheme.error
                     } else {
-                        Color(0xFFFFEB3B)
-                    }
+                        MaterialTheme.colorScheme.errorContainer
+                    },
+                    colorText = MaterialTheme.colorScheme.onErrorContainer
                 )
             }
         }
@@ -201,7 +215,8 @@ fun MyCustomButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    color: Color
+    colorBox: Color,
+    colorText: Color
 ) {
     val view = LocalView.current
     Box(
@@ -209,13 +224,17 @@ fun MyCustomButton(
             .animateContentSize()
             .size(100.dp)
             .clip(RoundedCornerShape(50.dp))
-            .background(color = color)
+            .background(color = colorBox)
             .clickable {
                 view.playSoundEffect(SoundEffectConstants.CLICK)
                 onClick()
             }
     ) {
-        Text(text = text, modifier = Modifier.align(alignment = Alignment.Center))
+        Text(
+            text = text,
+            color = colorText,
+            modifier = Modifier.align(alignment = Alignment.Center)
+        )
     }
 }
 

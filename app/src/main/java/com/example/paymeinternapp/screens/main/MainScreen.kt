@@ -124,10 +124,10 @@ private fun MainContent(modifier: Modifier = Modifier) {
                 topBar = {
                     TopAppBar(
                         colors = TopAppBarColors(
-                            containerColor = Color.White,
-                            scrolledContainerColor = Color.Transparent,
-                            navigationIconContentColor = Color.Black,
-                            titleContentColor = Color.Black,
+                            containerColor = MaterialTheme.colorScheme.onSecondary,
+                            scrolledContainerColor = MaterialTheme.colorScheme.onSecondary,
+                            navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
+                            titleContentColor = MaterialTheme.colorScheme.primary,
                             actionIconContentColor = Color.Transparent
                         ), title = {
                             Text(text = items[selectedItemIndex].screenTitle)

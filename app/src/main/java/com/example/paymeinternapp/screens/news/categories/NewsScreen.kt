@@ -77,15 +77,15 @@ private fun NewsScreenContent(
             SwipeRefreshIndicator(
                 state = swipeRefreshState,
                 refreshTriggerDistance = 120.dp,
-                backgroundColor = MaterialTheme.colorScheme.onPrimary,
-                contentColor = Color.LightGray
+                backgroundColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
             )
         }
     ) {
         LazyColumn(
             modifier = modifier
                 .fillMaxSize()
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.surfaceContainerLow)
         ) {
 
             item {
@@ -96,7 +96,12 @@ private fun NewsScreenContent(
                             searchText.value = it
                             onEventDispatcher(NewsContract.Intent.SearchByQuery(it))
                         },
-                        placeholder = { Text("Search file...") },
+                        placeholder = {
+                            Text(
+                                "Search file...",
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
+                        },
                         leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -118,7 +123,10 @@ private fun NewsScreenContent(
                                 onClick = {
                                     selectedCategory.value = category
                                     onEventDispatcher(NewsContract.Intent.ClickedCategory(category))
-                                }
+                                },
+                                colorBoxSelected = MaterialTheme.colorScheme.surfaceTint,
+                                colorBoxUnSelected = MaterialTheme.colorScheme.surfaceDim,
+                                colorText = MaterialTheme.colorScheme.onSurface
                             )
                         }
                     }
@@ -129,7 +137,7 @@ private fun NewsScreenContent(
                         text = "Latest News",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = Color.Gray,
+                        color = MaterialTheme.colorScheme.outline,
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
@@ -150,11 +158,17 @@ private fun NewsScreenContent(
                 items(uiState.articles) { newsItem ->
                     Column(
                         modifier = Modifier
-                            .background(color = Color.LightGray)
+                            .background(color = MaterialTheme.colorScheme.surface)
                     ) {
-                        NewsCard(newsItem = newsItem) {
-                            navigator.push(NewsDetails(newsItem))
-                        }
+                        NewsCard(
+                            newsItem = newsItem,
+                            colorBox = MaterialTheme.colorScheme.onSecondary,
+                            colorTitle = MaterialTheme.colorScheme.secondary,
+                            descriptionColor = MaterialTheme.colorScheme.secondaryContainer,
+                            buttonBoxColor = MaterialTheme.colorScheme.inversePrimary,
+                            buttonTextColor = MaterialTheme.colorScheme.inverseOnSurface,
+                            onClick = { navigator.push(NewsDetails(newsItem)) }
+                        )
                         Spacer(modifier = Modifier.height(16.dp))
                     }
 
@@ -166,17 +180,24 @@ private fun NewsScreenContent(
 
 
 @Composable
-fun CategoryChip(text: String, isSelected: Boolean, onClick: () -> Unit) {
+fun CategoryChip(
+    text: String,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    colorBoxSelected: Color,
+    colorBoxUnSelected: Color,
+    colorText: Color
+) {
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(16.dp))
-            .background(if (isSelected) Color.Blue else Color.LightGray)
+            .background(if (isSelected) colorBoxSelected else colorBoxUnSelected)
             .clickable { onClick() }
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
         Text(
             text = text,
-            color = if (isSelected) Color.White else Color.Black,
+            color = colorText,
             fontSize = 14.sp,
         )
     }
@@ -184,7 +205,15 @@ fun CategoryChip(text: String, isSelected: Boolean, onClick: () -> Unit) {
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun NewsCard(newsItem: ArticleUIData, onClick: () -> Unit) {
+fun NewsCard(
+    newsItem: ArticleUIData,
+    onClick: () -> Unit,
+    colorBox: Color,
+    colorTitle: Color,
+    descriptionColor: Color,
+    buttonBoxColor: Color,
+    buttonTextColor: Color
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -201,7 +230,7 @@ fun NewsCard(newsItem: ArticleUIData, onClick: () -> Unit) {
                     .fillMaxWidth()
                     .height(180.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(Color.LightGray)
+                    .background(colorBox)
             ) {
                 GlideImage(
                     model = newsItem.urlToImage,
@@ -221,25 +250,25 @@ fun NewsCard(newsItem: ArticleUIData, onClick: () -> Unit) {
                 text = newsItem.title ?: "",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black
+                color = colorTitle
             )
 
             Spacer(modifier = Modifier.height(12.dp))
             Text(
                 text = newsItem.description ?: "",
-                color = Color.White,
+                color = descriptionColor,
                 fontWeight = FontWeight.Medium,
                 maxLines = 3
             )
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(8.dp))
-                    .background(Color.Blue)
+                    .background(buttonBoxColor)
                     .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
                 Text(
                     text = "See more ...",
-                    color = Color.White,
+                    color = buttonTextColor,
                     fontWeight = FontWeight.Medium
                 )
             }
