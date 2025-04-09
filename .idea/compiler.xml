@@ -2,7 +2,6 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="17">
-      <module name="Payme_Intern_App.entities" target="11" />
       <module name="Payme_Intern_App.entities.main" target="11" />
       <module name="Payme_Intern_App.entities.test" target="11" />
       <module name="Payme_Intern_App.usecases" target="11" />

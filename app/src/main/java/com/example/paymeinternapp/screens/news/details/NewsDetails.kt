@@ -14,6 +14,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -24,6 +26,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
@@ -36,24 +40,37 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.hilt.getViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import com.example.domain.entities.ArticleUIData
+import com.example.domain.model.ui.ArticleUIData
+import com.example.domain.model.ui.NewsUIData
 import com.example.paymeinternapp.R
 import com.example.paymeinternapp.screens.news.browser.OpenUrlScreen
 
-class NewsDetails(private val data: ArticleUIData) : Screen {
+class NewsDetails(private val data: NewsUIData) : Screen {
     @Composable
     override fun Content() {
-        NewsDetailsContent(article = data)
+        val viewModel: NewsDetailsContract.ViewModel = getViewModel<NewsDetailsViewModel>()
+        val uiState = viewModel.uiState.collectAsState()
+        NewsDetailsContent(
+            article = data,
+            uIState = uiState,
+            onEventDispatcher = viewModel::onEventDispatcher
+        )
     }
 }
 
 @OptIn(ExperimentalGlideComposeApi::class, ExperimentalMaterial3Api::class)
 @Composable
-private fun NewsDetailsContent(modifier: Modifier = Modifier, article: ArticleUIData) {
+private fun NewsDetailsContent(
+    modifier: Modifier = Modifier,
+    article: NewsUIData,
+    uIState: State<NewsDetailsContract.UiState>,
+    onEventDispatcher: (NewsDetailsContract.Intent) -> Unit
+) {
     val navigator = LocalNavigator.currentOrThrow
     val scrollState = rememberScrollState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
@@ -91,6 +108,28 @@ private fun NewsDetailsContent(modifier: Modifier = Modifier, article: ArticleUI
                         )
                     }
                 },
+                actions = {
+                    IconButton(onClick = {
+//                        onEventDispatcher(
+//                            NewsDetailsContract.Intent.FavoriteClicked(
+//                                article = article,
+//                                isFavorite = article.isFavorite
+//                            )
+//                        )
+                    }) {
+//                        if (article.isFavorite) {
+//                            Icon(
+//                                imageVector = Icons.Default.Favorite,
+//                                contentDescription = "Add to favorite button"
+//                            )
+//                        } else {
+//                            Icon(
+//                                imageVector = Icons.Default.FavoriteBorder,
+//                                contentDescription = "Remove from favorite button"
+//                            )
+//                        }
+                    }
+                }
             )
         }
     ) { innerPadding ->

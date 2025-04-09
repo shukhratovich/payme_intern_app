@@ -31,6 +31,7 @@ benchmarkMacro = "1.3.3"
 hiltAndroid = "2.54"
 jetbrainsKotlinJvm = "2.1.10"
 roomKtx = "2.6.1"
+ksp = "2.1.10-1.0.29"
 
 [libraries]
 accompanist-swiperefresh = { module = "com.google.accompanist:accompanist-swiperefresh", version.ref = "accompanistSwiperefresh" }
@@ -75,7 +76,7 @@ androidx-benchmark-macro = { group = "androidx.benchmark", name = "benchmark-mac
 #room
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomKtx" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomKtx" }
-
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomKtx" }
 
 #hilt
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
@@ -93,8 +94,8 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
-
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
-
-java-library = { id = "java-library"}
+java-library = { id = "java-library" }
+#ksp
+google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

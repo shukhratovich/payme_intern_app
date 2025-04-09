@@ -1,6 +1,6 @@
 package com.example.data.remote.response
 
-import com.example.domain.entities.WeatherUIData
+import com.example.domain.model.ui.WeatherUIData
 import com.google.gson.annotations.SerializedName
 
 data class WeatherResponse(

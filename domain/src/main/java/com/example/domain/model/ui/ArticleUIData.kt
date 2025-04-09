@@ -1,4 +1,4 @@
-package com.example.domain.entities
+package com.example.domain.model.ui
 
 data class ArticleUIData(
     val source: SourceUIData?,
@@ -8,7 +8,9 @@ data class ArticleUIData(
     val url: String?,
     val urlToImage: String?,
     val publishedAt: String?,
-    val content: String?
+    val content: String?,
+    val isFavorite: Boolean = false,
+    val category: CategoryNews = CategoryNews.GENERAL
 )
 
 

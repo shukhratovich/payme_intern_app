@@ -140,7 +140,8 @@ private fun MainContent(modifier: Modifier = Modifier) {
                                 Icon(Icons.Default.Menu, contentDescription = "Menu")
                             }
                         })
-                }) { paddingValues ->
+                }
+            ) { paddingValues ->
 
                 when (selectedItemIndex) {
                     0 -> StopwatchScreen(modifier.padding(paddingValues)).Content()

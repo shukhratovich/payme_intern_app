@@ -5,7 +5,6 @@ import com.example.paymeinternapp.utils.DateFormatter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
@@ -16,7 +15,6 @@ import java.util.Locale
 
 object TimerClock {
     private var clocksJob: Job? = null
-
     private var job: Job? = null
     private val scope = CoroutineScope(Dispatchers.Default)
     private var currentTime: String = ""

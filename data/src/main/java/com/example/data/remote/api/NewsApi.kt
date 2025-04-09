@@ -1,6 +1,9 @@
 package com.example.data.remote.api
 
+import androidx.core.os.BuildCompat
+import com.example.data.BuildConfig
 import com.example.data.remote.response.NewsResponse
+import com.example.data.remote.response.NewsSourceData
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -11,17 +14,24 @@ interface NewsApi {
     suspend fun getNewsBySearch(
         @Query("q") q: String,
         @Query("from") from: String,
-        @Query("apiKey") apiKey: String = NEWS_API_KEY
+        @Query("apiKey") apiKey: String = BuildConfig.NEWS_API_KEY
     ): Response<NewsResponse>
 
     @GET("top-headlines")
     suspend fun getNewsByCategory(
-        @Query("category") category: String,
-        @Query("apiKey") apiKey: String = NEWS_API_KEY
+        @Query("category") category: String? = null,
+        @Query("apiKey") apiKey: String = BuildConfig.NEWS_API_KEY
     ): Response<NewsResponse>
 
+    @GET("top-headlines")
+    suspend fun getNewsBySource(
+        @Query("sources") source: String? = null,
+        @Query("apiKey") apiKey: String = BuildConfig.NEWS_API_KEY
+    ): Response<NewsResponse>
 
-    companion object {
-        private const val NEWS_API_KEY: String = "ad11181837d14643b0792c23a724f8be"
-    }
+    @GET("top-headlines/sources")
+    suspend fun getSources(
+        @Query("apiKey") apiKey: String = BuildConfig.NEWS_API_KEY
+    ): Response<NewsSourceData>
+
 }

@@ -25,7 +25,7 @@ private const val TIMER_PREFERENCES = "timer_prefs"
 
 @Module
 @InstallIn(SingletonComponent::class)
-class LocalModule {
+object LocalModule {
 
     @Provides
     @Singleton

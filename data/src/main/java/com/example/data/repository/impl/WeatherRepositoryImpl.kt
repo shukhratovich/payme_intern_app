@@ -2,8 +2,8 @@ package com.example.data.repository.impl
 
 import com.example.data.remote.api.WeatherApi
 import com.example.data.remote.response.toData
-import com.example.domain.entities.WeatherUIData
-import com.example.domain.repository.WeatherRepository
+import com.example.domain.model.ui.WeatherUIData
+import com.example.data.repository.WeatherRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
