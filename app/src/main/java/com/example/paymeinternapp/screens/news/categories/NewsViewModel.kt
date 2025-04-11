@@ -3,10 +3,14 @@ package com.example.paymeinternapp.screens.news.categories
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.domain.model.Network
+import com.example.domain.model.ui.CategoryNews
+import com.example.domain.model.ui.NewsUIData
+import com.example.domain.usecases.news.GetAllFavoriteNewsUseCase
+import com.example.domain.usecases.news.GetAllSourceUseCase
 import com.example.domain.usecases.news.GetNewsBySearchUseCase
 import com.example.domain.usecases.news.GetNewsBySourceUseCase
 import com.example.domain.usecases.news.GetNewsCategoryUseCase
-import com.example.domain.usecases.news.GetSourcesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -27,7 +31,8 @@ class NewsViewModel @Inject constructor(
     private val getNewsBySearchUseCase: GetNewsBySearchUseCase,
     private val getNewsCategoryUseCase: GetNewsCategoryUseCase,
     private val getNewsBySourceUseCase: GetNewsBySourceUseCase,
-    private val getSourcesUseCase: GetSourcesUseCase
+    private val getAllFavoriteNewsUseCase: GetAllFavoriteNewsUseCase,
+    private val getSourcesUseCase: GetAllSourceUseCase
 ) :
     ViewModel(), NewsContract.ViewModel {
 
@@ -35,8 +40,7 @@ class NewsViewModel @Inject constructor(
     private val searchQuery = MutableStateFlow("")
 
     init {
-        getNewsByCategory("general")
-        getSourceList()
+        getNewsByCategory(CategoryNews.BUSINESS)
     }
 
     private inline fun reduce(block: (NewsContract.UiState) -> NewsContract.UiState) {
@@ -45,39 +49,11 @@ class NewsViewModel @Inject constructor(
         uiState.value = new
     }
 
-    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     override fun onEventDispatcher(intent: NewsContract.Intent) {
         when (intent) {
             is NewsContract.Intent.OpenDetails -> {}
             is NewsContract.Intent.SearchByQuery -> {
-                searchQuery.value = intent.query
-                searchQuery
-                    .debounce(1000)
-                    .distinctUntilChanged()
-                    .filter { it.isNotBlank() }
-                    .flatMapLatest { query ->
-                        Log.d("TTT", "debounce: ${intent.query}")
-                        getNewsBySearchUseCase(q = query, from = "")
-                    }
-                    .onEach { response ->
-                        delay(300)
-                        Log.d("TTT", "onEach: ${intent.query}")
-                        response.onSuccess { success ->
-                            reduce {
-                                it.copy(
-                                    articles = success,
-                                    isLoading = false,
-                                    isFavoriteItems = false
-                                )
-                            }
-                        }
-                        response.onFailure { error ->
-                            reduce { it.copy(isLoading = false, isFavoriteItems = false) }
-                        }
-
-                    }.launchIn(viewModelScope)
-
-                Log.d("TTT", "out of debounce: ${intent.query}")
+                getNewsBySearch(intent.query)
             }
 
             is NewsContract.Intent.ClickedCategory -> {
@@ -88,22 +64,13 @@ class NewsViewModel @Inject constructor(
             NewsContract.Intent.PulledForRefresh -> {
                 reduce { it.copy(isRefreshSwiped = true) }
                 viewModelScope.launch {
-                    Log.d("TTT", "onEventDispatcher: pull to refresh1")
                     delay(1000)
                     reduce { it.copy(isRefreshSwiped = false) }
-                    Log.d("TTT", "onEventDispatcher: pull to refresh2")
                 }
             }
 
             NewsContract.Intent.FavoriteItemsClicked -> {
-//                val favorites = localNewsRepositoryTest.getFavoriteNews()
-//                favorites.onEach { result ->
-//                    result.filter { it.isFavorite == true
-//                    }.map {
-//                        list.add(it.article)
-//                        Log.d("AAA", "localNewsRepositoryTest: ${it.article}")
-//                    }
-//                }.launchIn(viewModelScope)
+                getFavorites()
             }
 
             NewsContract.Intent.ByCategoryClicked -> {
@@ -111,7 +78,7 @@ class NewsViewModel @Inject constructor(
             }
 
             NewsContract.Intent.BySourcesClicked -> {
-                reduce { it.copy(isFilterByCategory = false) }
+                getSourceList()
             }
 
             is NewsContract.Intent.ClickedSource -> {
@@ -120,57 +87,100 @@ class NewsViewModel @Inject constructor(
         }
     }
 
-    private fun getNewsByCategory(category: String) {
+   private fun getFavorites() {
+        viewModelScope.launch {
+            getAllFavoriteNewsUseCase.invoke().collect { favoriteNews ->
+                reduce { it.copy(isFavoriteItems = true, articles = favoriteNews.map { it.article }) }
+            }
+        }
+    }
+    private fun getNewsByCategory(category: CategoryNews) {
         reduce { it.copy(isLoading = true) }
         val response = getNewsCategoryUseCase.invoke(category)
         response.onEach { result ->
-            result.onSuccess { success ->
-                reduce { it.copy(articles = success, isLoading = false) }
-            }
-            result.onFailure { error ->
-                reduce { it.copy(isLoading = false) }
-            }
+            when (result) {
+                is Network.Error -> reduce {
+                    it.copy(
+                        errorMessage = result.message.message,
+                        isLoading = false
+                    )
+                }
 
+                is Network.Success<List<NewsUIData>> -> {
+                    reduce { it.copy(articles = result.data, isLoading = false) }
+                }
+            }
         }.launchIn(viewModelScope)
-//        reduce { it.copy(articles = uiState.value.articles.map { it.copy(category = categoryForSearch.value) }) }
     }
 
     private fun getNewsBySource(sourceId: String) {
         reduce { it.copy(isLoading = true) }
         val response = getNewsBySourceUseCase.invoke(sourceId)
         response.onEach { result ->
-            result.onSuccess { success ->
-                reduce { it.copy(articles = success, isLoading = false) }
-            }
-            result.onFailure { error ->
-                reduce { it.copy(isLoading = false) }
-            }
+            when (result) {
+                is Network.Error -> reduce {
+                    it.copy(
+                        errorMessage = result.message.message,
+                        isLoading = false
+                    )
+                }
 
+                is Network.Success<List<NewsUIData>> -> {
+                    reduce { it.copy(articles = result.data, isLoading = false) }
+                }
+            }
         }.launchIn(viewModelScope)
     }
-//    private fun receiving(response: Flow<Result<NewsUIData>>) {
-//        reduce { it.copy(isLoading = true) }
-//        response.onEach { result ->
-//            result.onSuccess { success ->
-//                reduce { it.copy(articles = success.articles, isLoading = false) }
-//            }
-//            result.onFailure { error ->
-//                reduce { it.copy(isLoading = false) }
-//                Log.d("TTT", "getNewsByCategory: error -> ${error.message}")
-//            }
-//
-//        }.launchIn(viewModelScope)
-//    }
 
     private fun getSourceList() {
         viewModelScope.launch {
-            val result = getSourcesUseCase.invoke()
-            if (result.isSuccess) {
-                result.onSuccess { sources ->
-                    reduce { it.copy(sources = sources) }
-                }
+            getSourcesUseCase.invoke().collect { result ->
+                result.fold(
+                    onSuccess = { sources ->
+                        Log.d("TTT", "getSourceList: $sources")
+                        reduce { it.copy(sources = sources, isFilterByCategory = false) }
+                        getNewsBySource(sources[0].id)
+                    },
+                    onFailure = { error ->
+                        reduce { it.copy(errorMessage = error.message) }
+                    }
+                )
             }
         }
+    }
 
+    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
+    private fun getNewsBySearch(query: String) {
+        reduce { it.copy(isLoading = true) }
+        searchQuery.value = query
+        searchQuery
+            .debounce(500)
+            .distinctUntilChanged()
+            .filter { it.isNotBlank() }
+            .flatMapLatest { query ->
+                getNewsBySearchUseCase(q = query, from = "")
+            }
+            .onEach { response ->
+                delay(300)
+                when (response) {
+                    is Network.Error -> reduce {
+                        it.copy(
+                            errorMessage = response.message.message,
+                            isLoading = false,
+                            isFavoriteItems = false
+                        )
+                    }
+
+                    is Network.Success<List<NewsUIData>> -> {
+                        reduce {
+                            it.copy(
+                                articles = response.data,
+                                isLoading = false,
+                                isFavoriteItems = false
+                            )
+                        }
+                    }
+                }
+            }.launchIn(viewModelScope)
     }
 }

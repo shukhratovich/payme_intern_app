@@ -23,3 +23,8 @@ data class ArticleWithFavourite(
     )
     val isFavourite: FavoriteNewsEntity?
 )
+
+fun ArticleWithFavourite.toUIData(): ArticleWithFavouriteUIData = ArticleWithFavouriteUIData(
+    article = article.toUIData(),
+    isFavorite = isFavourite?.isFavourite == true
+)

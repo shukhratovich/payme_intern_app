@@ -7,7 +7,8 @@ import kotlinx.coroutines.flow.StateFlow
 interface NewsDetailsContract {
 
     sealed interface Intent {
-        data class FavoriteClicked(val article: NewsUIData, val isFavorite: Boolean) : Intent
+        data class CheckFavorite(val data: NewsUIData) : Intent
+        data class FavoriteClicked(val article: NewsUIData) : Intent
     }
 
     data class UiState(

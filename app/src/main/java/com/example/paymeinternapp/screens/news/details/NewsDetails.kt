@@ -26,8 +26,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
@@ -54,6 +57,9 @@ class NewsDetails(private val data: NewsUIData) : Screen {
     @Composable
     override fun Content() {
         val viewModel: NewsDetailsContract.ViewModel = getViewModel<NewsDetailsViewModel>()
+        LaunchedEffect(Unit) {
+            viewModel.onEventDispatcher(NewsDetailsContract.Intent.CheckFavorite(data))
+        }
         val uiState = viewModel.uiState.collectAsState()
         NewsDetailsContent(
             article = data,
@@ -74,7 +80,6 @@ private fun NewsDetailsContent(
     val navigator = LocalNavigator.currentOrThrow
     val scrollState = rememberScrollState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -96,6 +101,7 @@ private fun NewsDetailsContent(
                             maxLines = 1,
                             overflow = TextOverflow.Clip,
                             modifier = Modifier
+                                .align(Alignment.Center)
                                 .basicMarquee()
                         )
                     }
@@ -110,24 +116,23 @@ private fun NewsDetailsContent(
                 },
                 actions = {
                     IconButton(onClick = {
-//                        onEventDispatcher(
-//                            NewsDetailsContract.Intent.FavoriteClicked(
-//                                article = article,
-//                                isFavorite = article.isFavorite
-//                            )
-//                        )
+                        onEventDispatcher(
+                            NewsDetailsContract.Intent.FavoriteClicked(
+                                article = article,
+                            )
+                        )
                     }) {
-//                        if (article.isFavorite) {
-//                            Icon(
-//                                imageVector = Icons.Default.Favorite,
-//                                contentDescription = "Add to favorite button"
-//                            )
-//                        } else {
-//                            Icon(
-//                                imageVector = Icons.Default.FavoriteBorder,
-//                                contentDescription = "Remove from favorite button"
-//                            )
-//                        }
+                        if (uIState.value.isFavorite) {
+                            Icon(
+                                imageVector = Icons.Default.Favorite,
+                                contentDescription = "Add to favorite button"
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Default.FavoriteBorder,
+                                contentDescription = "Remove from favorite button"
+                            )
+                        }
                     }
                 }
             )

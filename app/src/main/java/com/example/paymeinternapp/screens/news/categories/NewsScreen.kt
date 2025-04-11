@@ -55,8 +55,10 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.hilt.getViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.bumptech.glide.integration.compose.CrossFade
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.integration.compose.Transition
 import com.example.domain.model.ui.NewsUIData
 import com.example.paymeinternapp.R
 import com.example.paymeinternapp.screens.news.details.NewsDetails
@@ -83,6 +85,7 @@ private fun NewsScreenContent(
     val navigator = LocalNavigator.currentOrThrow
     val searchText = remember { mutableStateOf("") }
     var selectedCategory = remember { mutableStateOf(uiState.categories[0]) }
+    var selectedSource = remember { mutableStateOf("") }
     val swipeRefreshState = rememberSwipeRefreshState(uiState.isRefreshSwiped)
     var popUpMenuClicked by remember { mutableStateOf(false) }
     var popUpMenuPosition by remember { mutableStateOf(IntOffset.Zero) }
@@ -137,11 +140,10 @@ private fun NewsScreenContent(
                             shape = RoundedCornerShape(12.dp),
                             singleLine = true
                         )
-
                         Spacer(modifier = Modifier.height(16.dp))
                         Box(modifier = Modifier.fillMaxWidth()) {
                             Text(
-                                text = "Filtered by category",
+                                text = if (uiState.isFilterByCategory) "Filtered by category" else "Filtered by source",
                                 modifier = Modifier
                                     .align(Alignment.CenterStart)
                                     .padding(horizontal = 24.dp)
@@ -203,7 +205,7 @@ private fun NewsScreenContent(
                             ) {
                                 items(uiState.categories) { item ->
                                     CategoryChip(
-                                        text = item,
+                                        text = item.name,
                                         isSelected = item == selectedCategory.value,
                                         onClick = {
                                             selectedCategory.value = item
@@ -226,13 +228,13 @@ private fun NewsScreenContent(
                             ) {
                                 items(uiState.sources) { item ->
                                     CategoryChip(
-                                        text = item.second,
-                                        isSelected = item.second == selectedCategory.value,
+                                        text = item.name,
+                                        isSelected = item.name == selectedSource.value,
                                         onClick = {
-                                            selectedCategory.value = item.second
+                                            selectedSource.value = item.name
                                             onEventDispatcher(
                                                 NewsContract.Intent.ClickedSource(
-                                                    item.first
+                                                    item.id
                                                 )
                                             )
                                         },
@@ -369,10 +371,10 @@ fun NewsCard(
                 GlideImage(
                     model = newsItem.urlToImage,
                     contentDescription = "Item Image",
+                    transition = CrossFade,
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    it.load(newsItem.urlToImage)
-                        .placeholder(R.drawable.ic_placeholder)
+                    it.placeholder(R.drawable.ic_placeholder)
                         .error(R.drawable.ic_no_image_available)
                         .fallback(R.drawable.ic_no_image_available)
                 }

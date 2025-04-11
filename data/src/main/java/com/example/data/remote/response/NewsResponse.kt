@@ -1,6 +1,7 @@
 package com.example.data.remote.response
 
 import com.example.data.local.room.entity.NewsEntity
+import com.example.data.local.room.entity.SourcesEntity
 import com.example.domain.model.ui.ArticleUIData
 import com.example.domain.model.ui.CategoryNews
 import com.example.domain.model.ui.NewsSourceUIData
@@ -69,6 +70,17 @@ data class NewsSourcesData(
     val country: String?
 )
 
+fun NewsSourcesData.toRoomData(): SourcesEntity =
+    SourcesEntity(
+        sourceId = id,
+        name = name,
+        description = description ?: "",
+        url = url ?: "",
+        category = category ?: "",
+        language = language ?: "",
+        country = country ?: ""
+    )
+
 fun ArticlesData.toUIData(category: CategoryNews?): NewsUIData =
     NewsUIData(
         author = author,
@@ -82,23 +94,6 @@ fun ArticlesData.toUIData(category: CategoryNews?): NewsUIData =
         sourceId = source?.id,
         sourceName = source?.name
     )
-
-fun SourceData.toUiData(): SourceUIData = SourceUIData(id = id, name = name)
-
-fun NewsSourceData.toUIData(): NewsSourceUIData = NewsSourceUIData(
-    status = status ?: "",
-    sources = sources?.map { it.toUIData() } ?: emptyList()
-)
-
-fun NewsSourcesData.toUIData(): NewsSourcesUIData = NewsSourcesUIData(
-    id = id ?: "",
-    name = name ?: "",
-    description = description ?: "",
-    url = url ?: "",
-    category = category ?: "",
-    language = language ?: "",
-    country = country ?: ""
-)
 
 fun ArticlesData.toRoomData(): NewsEntity = NewsEntity(
     url = this.url ?: "",

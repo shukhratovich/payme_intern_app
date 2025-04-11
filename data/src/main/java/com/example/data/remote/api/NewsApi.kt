@@ -19,13 +19,13 @@ interface NewsApi {
 
     @GET("top-headlines")
     suspend fun getNewsByCategory(
-        @Query("category") category: String? = null,
+        @Query("category") category: String?,
         @Query("apiKey") apiKey: String = BuildConfig.NEWS_API_KEY
     ): Response<NewsResponse>
 
     @GET("top-headlines")
     suspend fun getNewsBySource(
-        @Query("sources") source: String? = null,
+        @Query("sources") source: String?,
         @Query("apiKey") apiKey: String = BuildConfig.NEWS_API_KEY
     ): Response<NewsResponse>
 

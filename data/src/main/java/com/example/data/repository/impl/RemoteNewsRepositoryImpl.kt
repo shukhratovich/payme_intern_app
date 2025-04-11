@@ -1,17 +1,22 @@
 package com.example.data.repository.impl
 
+import android.util.Log
 import com.example.data.local.room.entity.NewsEntity
 import com.example.data.remote.api.NewsApi
+import com.example.data.remote.response.NewsSourcesData
 import com.example.data.remote.response.toRoomData
 import com.example.data.remote.response.toUIData
-import com.example.domain.model.ui.NewsSourceUIData
 import com.example.domain.model.ui.NewsUIData
 import com.example.data.repository.RemoteNewsRepository
+import com.example.domain.model.Network
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.retry
+import okio.IOException
 import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -23,19 +28,19 @@ class RemoteNewsRepositoryImpl @Inject constructor(
     private inline fun <T, K> fetchNewsData(
         crossinline call: suspend () -> Response<T>,
         crossinline mapper: (T) -> K
-    ): Flow<Result<K>> =
+    ): Flow<Network<K>> =
         flow {
             val result = call()
             if (result.isSuccessful && result.body() != null) {
-                emit(Result.success(mapper(result.body()!!)))
+                emit(Network.Success(mapper(result.body()!!)))
             } else {
-                emit(Result.failure(Throwable(result.errorBody().toString())))
+                emit(Network.Error(Throwable(result.errorBody()?.string() ?: "Unknown error")))
             }
         }.flowOn(Dispatchers.IO).catch { error ->
-            emit(Result.failure(error))
+            emit(Network.Error(error))
         }
 
-    override fun getNewsBySearch(q: String, from: String): Flow<Result<List<NewsUIData>>> {
+    override fun getNewsBySearch(q: String, from: String): Flow<Network<List<NewsUIData>>> {
         return fetchNewsData(
             call = { newsApi.getNewsBySearch(q = q, from = from) },
             mapper = { news ->
@@ -43,7 +48,7 @@ class RemoteNewsRepositoryImpl @Inject constructor(
             })
     }
 
-    override fun getNewsByCategory(category: String): Flow<Result<List<NewsEntity>>> {
+    override fun getNewsByCategory(category: String): Flow<Network<List<NewsEntity>>> {
         return fetchNewsData(
             call = { newsApi.getNewsByCategory(category = category) },
             mapper = { newsResponse ->
@@ -52,7 +57,7 @@ class RemoteNewsRepositoryImpl @Inject constructor(
         )
     }
 
-    override fun getNewsBySources(sourceId: String?): Flow<Result<List<NewsEntity>>> {
+    override fun getNewsBySources(sourceId: String?): Flow<Network<List<NewsEntity>>> {
         return fetchNewsData(
             call = { newsApi.getNewsBySource(sourceId) },
             mapper = { newsResponse ->
@@ -61,16 +66,17 @@ class RemoteNewsRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun getSource(): Result<List<Pair<String, String>>> {
+    override suspend fun getSource(): Result<List<NewsSourcesData>> {
         return try {
             val response = newsApi.getSources()
             if (response.isSuccessful && response.body() != null) {
-                val resultList = response.body()!!.sources?.let { it.map { source ->
-                    Pair(source.id, source.name) }
-                } ?: listOf()
+                val resultList = response.body()!!.sources ?: listOf()
                 Result.success(resultList)
             } else {
-                Result.failure(Exception("Error: ${response.code()} ${response.message()}"))
+                val errorBody =
+                    response.errorBody()?.toString() ?: "{\"status\": \"Unknown Message\"}"
+                val error = Gson().fromJson(errorBody, Error::class.java)
+                Result.failure(Throwable("${error.message}"))
             }
         } catch (e: Exception) {
             Result.failure(e)
