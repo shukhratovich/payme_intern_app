@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -57,6 +58,7 @@ class NewsViewModel @Inject constructor(
             }
 
             is NewsContract.Intent.ClickedCategory -> {
+                Log.d("TTT", "onEventDispatcher: ClickedCategory")
                 reduce { it.copy(isFavoriteItems = false) }
                 getNewsByCategory(intent.category)
             }
@@ -87,13 +89,14 @@ class NewsViewModel @Inject constructor(
         }
     }
 
-   private fun getFavorites() {
+    private fun getFavorites() {
         viewModelScope.launch {
-            getAllFavoriteNewsUseCase.invoke().collect { favoriteNews ->
-                reduce { it.copy(isFavoriteItems = true, articles = favoriteNews.map { it.article }) }
-            }
+            val favoriteNews = getAllFavoriteNewsUseCase.invoke().first()
+            Log.d("TTT", "getFavorites: $favoriteNews")
+            reduce { it.copy(isFavoriteItems = true, articles = favoriteNews.map { it.article }) }
         }
     }
+
     private fun getNewsByCategory(category: CategoryNews) {
         reduce { it.copy(isLoading = true) }
         val response = getNewsCategoryUseCase.invoke(category)
@@ -137,8 +140,13 @@ class NewsViewModel @Inject constructor(
             getSourcesUseCase.invoke().collect { result ->
                 result.fold(
                     onSuccess = { sources ->
-                        Log.d("TTT", "getSourceList: $sources")
-                        reduce { it.copy(sources = sources, isFilterByCategory = false) }
+                        reduce {
+                            it.copy(
+                                sources = sources,
+                                isFilterByCategory = false,
+                                isFavoriteItems = false
+                            )
+                        }
                         getNewsBySource(sources[0].id)
                     },
                     onFailure = { error ->
@@ -151,36 +159,38 @@ class NewsViewModel @Inject constructor(
 
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     private fun getNewsBySearch(query: String) {
-        reduce { it.copy(isLoading = true) }
-        searchQuery.value = query
-        searchQuery
-            .debounce(500)
-            .distinctUntilChanged()
-            .filter { it.isNotBlank() }
-            .flatMapLatest { query ->
-                getNewsBySearchUseCase(q = query, from = "")
-            }
-            .onEach { response ->
-                delay(300)
-                when (response) {
-                    is Network.Error -> reduce {
-                        it.copy(
-                            errorMessage = response.message.message,
-                            isLoading = false,
-                            isFavoriteItems = false
-                        )
-                    }
-
-                    is Network.Success<List<NewsUIData>> -> {
-                        reduce {
+        if (query.isNotBlank()) {
+            reduce { it.copy(isLoading = true) }
+            searchQuery.value = query
+            searchQuery
+                .debounce(500)
+                .distinctUntilChanged()
+                .filter { it.isNotBlank() }
+                .flatMapLatest { query ->
+                    getNewsBySearchUseCase(q = query, from = "")
+                }
+                .onEach { response ->
+                    delay(300)
+                    when (response) {
+                        is Network.Error -> reduce {
                             it.copy(
-                                articles = response.data,
+                                errorMessage = response.message.message,
                                 isLoading = false,
                                 isFavoriteItems = false
                             )
                         }
+
+                        is Network.Success<List<NewsUIData>> -> {
+                            reduce {
+                                it.copy(
+                                    articles = response.data,
+                                    isLoading = false,
+                                    isFavoriteItems = false
+                                )
+                            }
+                        }
                     }
-                }
-            }.launchIn(viewModelScope)
+                }.launchIn(viewModelScope)
+        }
     }
 }

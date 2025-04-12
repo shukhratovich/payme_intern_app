@@ -1,6 +1,5 @@
 package com.example.paymeinternapp.timer
 
-import android.util.Log
 import com.example.paymeinternapp.utils.DateFormatter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +23,6 @@ object TimerClock {
 
     var stopwatchState = MutableStateFlow("00:00:00")
 
-    //    var onElapsedTimeListener: ((Long) -> Unit)? = null
     var onCurrentTimeListener: ((String) -> Unit)? = null
 
 
@@ -35,7 +33,6 @@ object TimerClock {
                 while (isActive) {
                     elapsedTimeInMillis = System.currentTimeMillis() - startTime
                     stopwatchState.value = DateFormatter.formatTimer(elapsedTimeInMillis)
-//                    onElapsedTimeListener?.invoke(elapsedTimeInMillis)
                 }
             }
         }
@@ -79,8 +76,6 @@ object TimerClock {
     }
 
     fun onDestroy() {
-        Log.d("TTT", "onDestroy: timer destroyed")
-//        onElapsedTimeListener = null
         onCurrentTimeListener = null
         clocksJob?.cancel()
         clocksJob = null

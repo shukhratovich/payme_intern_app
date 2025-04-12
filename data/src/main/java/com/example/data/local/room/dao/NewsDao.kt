@@ -38,11 +38,11 @@ interface NewsDao {
 
     @Transaction
     @Query("SELECT * FROM news_table")
-    fun getAllNews2(): Flow<List<ArticleWithFavourite>>
+    fun getAllNewsFavorite(): Flow<List<ArticleWithFavourite>>
 
     @Transaction
     @Query("SELECT * FROM favorites WHERE isFavourite = 1")
-    fun getAllFavouriteNews(): Flow<List<ArticleWithFavourite>>
+    fun getAllFavourite(): Flow<List<ArticleWithFavourite>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun markAsOpposite(entity: FavoriteNewsEntity)

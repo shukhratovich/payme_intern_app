@@ -2,12 +2,8 @@ package com.example.data.remote.response
 
 import com.example.data.local.room.entity.NewsEntity
 import com.example.data.local.room.entity.SourcesEntity
-import com.example.domain.model.ui.ArticleUIData
 import com.example.domain.model.ui.CategoryNews
-import com.example.domain.model.ui.NewsSourceUIData
-import com.example.domain.model.ui.NewsSourcesUIData
 import com.example.domain.model.ui.NewsUIData
-import com.example.domain.model.ui.SourceUIData
 import com.google.gson.annotations.SerializedName
 import kotlin.String
 

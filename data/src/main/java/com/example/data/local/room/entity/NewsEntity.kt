@@ -3,10 +3,8 @@ package com.example.data.local.room.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.domain.model.ui.ArticleUIData
 import com.example.domain.model.ui.CategoryNews
 import com.example.domain.model.ui.NewsUIData
-import com.example.domain.model.ui.SourceUIData
 
 
 @Entity(tableName = "news_table")

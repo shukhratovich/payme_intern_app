@@ -65,20 +65,6 @@ class WeatherViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-//    fun getWeatherDescription(weather: String): WeatherType {
-//        return when (weather) {
-//            "Clouds" -> WeatherType.CLOUDY
-//            "Clear" -> WeatherType.CLEAR
-//            "Atmosphere" -> WeatherType.ATMOSPHERE
-//            "Snow" -> WeatherType.SNOWY
-//            "Rain", "Drizzle" -> WeatherType.RAINY
-//            "Thunderstorm" -> WeatherType.THUNDERSTORM
-//            else -> {
-//                WeatherType.NON
-//            }
-//        }
-//    }
-
     fun getColorBackground(weather: String): Color {
         return when (weather) {
             "Clouds" -> Color(0xFFB0BEC5)

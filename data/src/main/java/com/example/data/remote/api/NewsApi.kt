@@ -1,6 +1,5 @@
 package com.example.data.remote.api
 
-import androidx.core.os.BuildCompat
 import com.example.data.BuildConfig
 import com.example.data.remote.response.NewsResponse
 import com.example.data.remote.response.NewsSourceData

@@ -2,6 +2,7 @@ package com.example.data.di
 
 import com.example.data.usecase.impl.news.AddFavoriteNewsToLocalUseCaseImpl
 import com.example.data.usecase.impl.news.GetAllFavoriteNewsUseCaseImpl
+import com.example.data.usecase.impl.news.GetAllFavoriteUseCaseImpl
 import com.example.data.usecase.impl.news.GetAllSourceUseCaseImpl
 import com.example.data.usecase.impl.news.GetNewsBySearchUseCaseImpl
 import com.example.data.usecase.impl.news.GetNewsBySourceUseCaseImpl
@@ -11,6 +12,7 @@ import com.example.data.usecase.impl.stopwatch.SaveTimeUseCaseImpl
 import com.example.data.usecase.impl.weather.GetCurrentWeatherUseCaseImpl
 import com.example.domain.usecases.news.AddFavoriteNewsToLocalUseCase
 import com.example.domain.usecases.news.GetAllFavoriteNewsUseCase
+import com.example.domain.usecases.news.GetAllFavoriteUseCase
 import com.example.domain.usecases.news.GetAllSourceUseCase
 import com.example.domain.usecases.news.GetNewsBySearchUseCase
 import com.example.domain.usecases.news.GetNewsBySourceUseCase
@@ -52,5 +54,8 @@ interface UseCaseModule {
     fun bindGetSourceUC(impl: GetAllSourceUseCaseImpl): GetAllSourceUseCase
 
     @[Binds ViewModelScoped]
-    fun bindGetFavoriteUC(impl: GetAllFavoriteNewsUseCaseImpl): GetAllFavoriteNewsUseCase
+    fun bindGetFavoriteUC(impl: GetAllFavoriteUseCaseImpl): GetAllFavoriteUseCase
+
+    @[Binds ViewModelScoped]
+    fun bindGetFavoriteNewsUC(impl: GetAllFavoriteNewsUseCaseImpl): GetAllFavoriteNewsUseCase
 }

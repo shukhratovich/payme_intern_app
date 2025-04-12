@@ -1,6 +1,5 @@
 package com.example.data.repository.impl
 
-import android.util.Log
 import com.example.data.local.room.entity.NewsEntity
 import com.example.data.remote.api.NewsApi
 import com.example.data.remote.response.NewsSourcesData
@@ -15,8 +14,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.retry
-import okio.IOException
 import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton

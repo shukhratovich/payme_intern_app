@@ -9,7 +9,7 @@ import com.example.data.local.room.entity.SourcesEntity
 
 @Database(
     entities = [NewsEntity::class, FavoriteNewsEntity::class, SourcesEntity::class],
-    version = 2
+    version = 1
 )
 abstract class NewsDatabase : RoomDatabase() {
     abstract fun newsDao(): NewsDao

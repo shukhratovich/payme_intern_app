@@ -4,10 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.model.ui.NewsUIData
 import com.example.domain.usecases.news.AddFavoriteNewsToLocalUseCase
-import com.example.domain.usecases.news.GetAllFavoriteNewsUseCase
+import com.example.domain.usecases.news.GetAllFavoriteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class NewsDetailsViewModel @Inject constructor(
     private val addFavoriteNewsToLocalUseCase: AddFavoriteNewsToLocalUseCase,
-    private val getAllFavoriteNewsUseCase: GetAllFavoriteNewsUseCase
+    private val getAllFavoriteNewsUseCase: GetAllFavoriteUseCase
 ) : ViewModel(), NewsDetailsContract.ViewModel {
 
     override val uiState = MutableStateFlow(NewsDetailsContract.UiState())

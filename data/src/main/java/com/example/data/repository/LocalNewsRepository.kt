@@ -10,5 +10,5 @@ interface LocalNewsRepository {
     suspend fun addAllSources(items: List<SourcesEntity>)
     fun getAllSources(): Flow<List<SourcesEntity>>
     fun getAllFavorite(): Flow<List<ArticleWithFavourite>>
-//    fun getFavoriteNews(): Flow<List<ArticleWithFavouriteUIData>>
+    fun getAllFavoriteNews(): Flow<List<ArticleWithFavourite>>
 }
