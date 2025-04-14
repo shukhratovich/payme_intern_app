@@ -22,7 +22,6 @@ class GetAllSourceUseCaseImpl @Inject constructor(
             },
             onFailure = {
                 emit(Result.failure(it))
-                return@flow
             }
         )
         localNewsRepository.getAllSources().collect { local ->

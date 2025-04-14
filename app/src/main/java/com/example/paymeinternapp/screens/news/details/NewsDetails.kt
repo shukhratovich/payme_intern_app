@@ -50,6 +50,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.domain.model.ui.ArticleUIData
 import com.example.domain.model.ui.NewsUIData
+import com.example.domain.model.ui.uiDate
 import com.example.paymeinternapp.R
 import com.example.paymeinternapp.screens.news.browser.OpenUrlScreen
 
@@ -136,7 +137,7 @@ private fun NewsDetailsContent(
                     }
                 }
             )
-        }
+        },
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -164,7 +165,7 @@ private fun NewsDetailsContent(
                     .padding(bottom = 24.dp)
             ) {
                 Text(
-                    text = article.title ?: "",
+                    text = article.title.orEmpty(),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp,
@@ -180,11 +181,11 @@ private fun NewsDetailsContent(
                 )
 
                 Row(
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(bottom = 24.dp),
-                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "${article.author ?: ""} - ${article.publishedAt ?: ""}",
+                        text = article.uiDate,
                         color = MaterialTheme.colorScheme.outlineVariant,
                         fontSize = 14.sp,
                         modifier = Modifier.padding(end = 8.dp)

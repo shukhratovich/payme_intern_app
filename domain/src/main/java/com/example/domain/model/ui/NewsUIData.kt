@@ -12,3 +12,5 @@ data class NewsUIData(
     val sourceId: String?,
     val sourceName: String?,
 )
+
+val NewsUIData.uiDate get() = "${author.orEmpty()} - ${publishedAt.orEmpty()}"

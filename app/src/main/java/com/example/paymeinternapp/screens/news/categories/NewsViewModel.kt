@@ -1,5 +1,6 @@
 package com.example.paymeinternapp.screens.news.categories
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.model.Network
@@ -14,7 +15,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
@@ -22,6 +25,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.text.isNotBlank
@@ -33,20 +37,24 @@ class NewsViewModel @Inject constructor(
     private val getNewsBySourceUseCase: GetNewsBySourceUseCase,
     private val getAllFavoriteNewsUseCase: GetAllFavoriteNewsUseCase,
     private val getSourcesUseCase: GetAllSourceUseCase
-) :
-    ViewModel(), NewsContract.ViewModel {
+) : ViewModel(), NewsContract.ViewModel {
 
     override val uiState = MutableStateFlow(NewsContract.UiState())
+
+    private val _effect = MutableSharedFlow<NewsContract.SideEffect>()
+    override val effect = _effect.asSharedFlow()
+
     private val searchQuery = MutableStateFlow("")
 
     init {
         getNewsByCategory(CategoryNews.BUSINESS)
+        Log.d("TTT", "init: called")
     }
 
     private inline fun reduce(block: (NewsContract.UiState) -> NewsContract.UiState) {
         val old = uiState.value
         val new = block(old)
-        uiState.value = new
+        uiState.update { new }
     }
 
     override fun onEventDispatcher(intent: NewsContract.Intent) {
@@ -100,11 +108,9 @@ class NewsViewModel @Inject constructor(
         val response = getNewsCategoryUseCase.invoke(category)
         response.onEach { result ->
             when (result) {
-                is Network.Error -> reduce {
-                    it.copy(
-                        errorMessage = result.message.message,
-                        isLoading = false
-                    )
+                is Network.Error -> {
+                    _effect.emit(NewsContract.SideEffect.Snackbar(result.message.message ?: "Unknown error"))
+                    reduce { it.copy(isLoading = false) }
                 }
 
                 is Network.Success<List<NewsUIData>> -> {
@@ -115,7 +121,7 @@ class NewsViewModel @Inject constructor(
     }
 
     private fun getNewsBySource(sourceId: String) {
-        reduce { it.copy(isLoading = true) }
+        reduce { it.copy(isLoading = true, isFavoriteItems = false) }
         val response = getNewsBySourceUseCase.invoke(sourceId)
         response.onEach { result ->
             when (result) {
@@ -126,8 +132,8 @@ class NewsViewModel @Inject constructor(
                     )
                 }
 
-                is Network.Success<List<NewsUIData>> -> {
-                    reduce { it.copy(articles = result.data, isLoading = false) }
+                is Network.Success<List<NewsUIData>> -> reduce {
+                    it.copy(articles = result.data, isLoading = false)
                 }
             }
         }.launchIn(viewModelScope)

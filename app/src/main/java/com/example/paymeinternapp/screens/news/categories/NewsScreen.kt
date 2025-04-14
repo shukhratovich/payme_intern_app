@@ -38,6 +38,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -66,22 +67,47 @@ import com.example.paymeinternapp.utils.toIntOffset
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import kotlinx.coroutines.launch
 
 class NewsScreen(private val modifier: Modifier = Modifier) : Screen {
     @Composable
     override fun Content() {
         val viewModel: NewsContract.ViewModel = getViewModel<NewsViewModel>()
         val uiState = viewModel.uiState.collectAsState()
-        NewsScreenContent(modifier, uiState.value, viewModel::onEventDispatcher)
+        val scope = rememberCoroutineScope()
+        val snackBarHostState = remember { SnackbarHostState() }
+
+
+        LaunchedEffect(Unit) {
+            viewModel.effect.collect { effect ->
+                when (effect) {
+                    is NewsContract.SideEffect.Snackbar -> {
+                        scope.launch {
+                            snackBarHostState.showSnackbar(effect.message)
+                        }
+                    }
+                }
+
+            }
+        }
+
+        NewsScreenContent(
+            uiState.value,
+            viewModel::onEventDispatcher,
+            snackBarHostState,
+            modifier = modifier
+        )
     }
 }
 
 @Composable
 private fun NewsScreenContent(
-    modifier: Modifier = Modifier,
     uiState: NewsContract.UiState,
-    onEventDispatcher: (NewsContract.Intent) -> Unit
-) {
+    onEventDispatcher: (NewsContract.Intent) -> Unit,
+    snackBarHostState: SnackbarHostState,
+    modifier: Modifier = Modifier,
+
+    ) {
     val navigator = LocalNavigator.currentOrThrow
     val searchText = remember { mutableStateOf("") }
     var selectedCategory = remember { mutableStateOf(CategoryNews.BUSINESS) }
@@ -89,13 +115,7 @@ private fun NewsScreenContent(
     val swipeRefreshState = rememberSwipeRefreshState(uiState.isRefreshSwiped)
     var popUpMenuClicked by remember { mutableStateOf(false) }
     var popUpMenuPosition by remember { mutableStateOf(IntOffset.Zero) }
-    val snackBarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(uiState.errorMessage) {
-        uiState.errorMessage?.let { message ->
-            snackBarHostState.showSnackbar(message)
-        }
-    }
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
         contentWindowInsets = WindowInsets(0)

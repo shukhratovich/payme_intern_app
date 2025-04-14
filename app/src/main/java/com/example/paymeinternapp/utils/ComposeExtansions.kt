@@ -60,10 +60,11 @@ fun NewsCard(
     colorTitle: Color,
     descriptionColor: Color,
     buttonBoxColor: Color,
-    buttonTextColor: Color
+    buttonTextColor: Color,
+    modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(16.dp)
             .clickable { onClick() },

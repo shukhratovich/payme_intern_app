@@ -4,6 +4,9 @@ import com.example.domain.model.ui.ArticleUIData
 import com.example.domain.model.ui.CategoryNews
 import com.example.domain.model.ui.NewsSourcesUIData
 import com.example.domain.model.ui.NewsUIData
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 
 interface NewsContract {
@@ -29,8 +32,14 @@ interface NewsContract {
         val isFavoriteItems: Boolean = false,
     )
 
+    sealed class SideEffect {
+        data class Snackbar(val message: String): SideEffect()
+    }
+
     interface ViewModel {
         val uiState: StateFlow<UiState>
+        val effect: SharedFlow<SideEffect>
         fun onEventDispatcher(intent: Intent)
     }
+
 }

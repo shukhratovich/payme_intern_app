@@ -13,8 +13,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class LocalNewsRepositoryImpl @Inject constructor(private val newsDao: NewsDao) :
-    LocalNewsRepository {
+class LocalNewsRepositoryImpl @Inject constructor(
+    private val newsDao: NewsDao
+) : LocalNewsRepository {
     override suspend fun addFavoriteNews(item: NewsUIData, isFavorite: Boolean) {
         newsDao.markAsOpposite(FavoriteNewsEntity(item.url, isFavorite))
     }
