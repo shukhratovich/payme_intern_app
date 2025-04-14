@@ -23,7 +23,7 @@ interface NewsContract {
         val isLoading: Boolean = false,
         val isRefreshSwiped: Boolean = false,
         val articles: List<NewsUIData> = listOf(),
-        val categories: List<CategoryNews> = CategoryNews.entries,
+        val categories: List<CategoryNews> = CategoryNews.entries.filter { it != CategoryNews.NULL },
         val sources: List<NewsSourcesUIData> = listOf(),
         val isFilterByCategory: Boolean = true,
         val isFavoriteItems: Boolean = false,
