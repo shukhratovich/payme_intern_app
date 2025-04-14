@@ -52,6 +52,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.hilt.getViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.example.domain.model.ui.CategoryNews
 import com.example.paymeinternapp.R
 import com.example.paymeinternapp.screens.news.details.NewsDetails
 import com.example.paymeinternapp.utils.CategoryChip
@@ -78,7 +79,7 @@ private fun NewsScreenContent(
 ) {
     val navigator = LocalNavigator.currentOrThrow
     val searchText = remember { mutableStateOf("") }
-    var selectedCategory = remember { mutableStateOf(uiState.categories[0]) }
+    var selectedCategory = remember { mutableStateOf(CategoryNews.BUSINESS) }
     var selectedSource = remember { mutableStateOf("") }
     val swipeRefreshState = rememberSwipeRefreshState(uiState.isRefreshSwiped)
     var popUpMenuClicked by remember { mutableStateOf(false) }

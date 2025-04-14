@@ -58,7 +58,6 @@ class NewsViewModel @Inject constructor(
             }
 
             is NewsContract.Intent.ClickedCategory -> {
-                Log.d("TTT", "onEventDispatcher: ClickedCategory")
                 reduce { it.copy(isFavoriteItems = false) }
                 getNewsByCategory(intent.category)
             }
@@ -67,6 +66,7 @@ class NewsViewModel @Inject constructor(
                 reduce { it.copy(isRefreshSwiped = true) }
                 viewModelScope.launch {
                     delay(1000)
+                    getSourceList()
                     reduce { it.copy(isRefreshSwiped = false) }
                 }
             }
@@ -92,7 +92,6 @@ class NewsViewModel @Inject constructor(
     private fun getFavorites() {
         viewModelScope.launch {
             val favoriteNews = getAllFavoriteNewsUseCase.invoke().first()
-            Log.d("TTT", "getFavorites: $favoriteNews")
             reduce { it.copy(isFavoriteItems = true, articles = favoriteNews.map { it.article }) }
         }
     }
@@ -147,7 +146,6 @@ class NewsViewModel @Inject constructor(
                                 isFavoriteItems = false
                             )
                         }
-                        getNewsBySource(sources[0].id)
                     },
                     onFailure = { error ->
                         reduce { it.copy(errorMessage = error.message) }
