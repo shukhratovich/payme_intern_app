@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -126,8 +127,13 @@ fun WeatherScreenContent(
 @Composable
 fun WeatherDetail(title: String, value: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = title, color = Color.White, fontSize = 16.sp)
-        Text(text = value, color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+        Text(text = title, color = MaterialTheme.colorScheme.onPrimary, fontSize = 16.sp)
+        Text(
+            text = value,
+            color = MaterialTheme.colorScheme.onPrimary,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold
+        )
     }
 }
 
@@ -135,7 +141,7 @@ fun WeatherDetail(title: String, value: String) {
 fun RefreshButton(onClick: () -> Unit) {
     Icon(
         imageVector = Icons.Default.Refresh,
-        tint = Color.White,
+        tint = MaterialTheme.colorScheme.primary,
         contentDescription = "Refresh",
         modifier = Modifier
             .size(100.dp)

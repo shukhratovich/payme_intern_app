@@ -1,6 +1,5 @@
 package com.example.paymeinternapp.screens.news.categories
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.model.Network
@@ -168,7 +167,6 @@ class NewsViewModel @Inject constructor(
                     getNewsBySearchUseCase(q = query, from = "")
                 }
                 .onEach { response ->
-                    delay(300)
                     when (response) {
                         is Network.Error -> reduce {
                             it.copy(
